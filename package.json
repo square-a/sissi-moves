@@ -8,10 +8,13 @@
   },
   "bugs": "https://github.com/square-a/sissi-moves/issues",
   "dependencies": {
-
+    "chalk": "^2.4.1",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
+    "@types/chalk": "^2.2.0",
     "@types/node": "^10.3.3",
+    "@types/winston": "^2.3.9",
     "ts-node": "^6.1.1",
     "tslib": "^1.9.2",
     "tslint": "^5.10.0",
@@ -34,7 +37,7 @@
   "main": "lib/index.js",
   "repository": "square-a/sissi-moves",
   "scripts": {
-    "prepare": "rm -rf lib && tsc && cp -r src/templates lib/templates"
+    "prepare": "rm -rf lib && tsc"
   },
   "types": "lib/index.d.ts"
 }

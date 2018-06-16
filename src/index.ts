@@ -1,9 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import migrate from './migrate';
 import { readJSON } from './utils';
 
-export = function migrate() {
+export = function run() {
   const contentPath = path.join(process.cwd(), 'content.json');
   const structurePath = path.join(process.cwd(), 'structure.json');
 
@@ -18,4 +19,6 @@ export = function migrate() {
     console.log(cntError);
     return;
   }
+
+  migrate(content, structure);
 }
