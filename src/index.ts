@@ -27,6 +27,7 @@ export = function run() {
   } = structure.settings;
 
   m.removePages(content, maxPages);
-  // addPages(content, minPages, structure);
   m.removePageSections(content, maxSectionsPerPage);
+
+  m.addPages(content, minPages, structure);
 }

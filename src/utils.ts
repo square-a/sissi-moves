@@ -13,3 +13,7 @@ export function readJSON(path) {
     return { error: 'Couldn\'t read file.' };
   }
 }
+
+export function getContentId() {
+  return Math.random().toString(36).substring(2, 9);
+}

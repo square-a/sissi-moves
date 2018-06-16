@@ -10,8 +10,8 @@ export function removePageSections(content, maxSections) {
       }
       const sections = sectionsToRemove.join(', ');
       logger(
-        `Sections %=s% will be removed from page %=p%`,
-        { s: { str: sections, level: 2 }, p: { str: page.id, level: 1 }}
+        `Section(s) %=s% will be removed from page %=p%`,
+        { s: { str: sections, level: 3 }, p: { str: page.id, level: 2 }}
       );
     }
   });

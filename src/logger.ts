@@ -2,9 +2,9 @@ import chalk from 'chalk';
 
 const levelColors = {
   0: 'white',
-  1: 'yellow',
-  2: 'redBright',
-  3: 'blue',
+  1: 'green',
+  2: 'yellow',
+  3: 'redBright',
 };
 
 export default function logger(
