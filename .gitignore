@@ -1,7 +1,9 @@
 *-debug.log
 *-error.log
-/dist
 /lib
 /tmp
 /yarn.lock
 node_modules
+content.json
+content.backup.json
+structure.json

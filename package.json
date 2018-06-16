@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "author": "Alex Kott @AlexKott",
   "bin": {
-    "sissi": "./bin/run"
+    "sissi-moves": "./bin/run"
   },
   "bugs": "https://github.com/square-a/sissi-moves/issues",
   "dependencies": {
@@ -32,9 +32,6 @@
   ],
   "license": "MIT",
   "main": "lib/index.js",
-  "oclif": {
-    "bin": "sissi-moves"
-  },
   "repository": "square-a/sissi-moves",
   "scripts": {
     "prepare": "rm -rf lib && tsc && cp -r src/templates lib/templates"
