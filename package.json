@@ -9,6 +9,8 @@
   "bugs": "https://github.com/square-a/sissi-moves/issues",
   "dependencies": {
     "chalk": "^2.4.1",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.get": "^4.4.2",
     "winston": "^3.0.0"
   },
   "devDependencies": {
