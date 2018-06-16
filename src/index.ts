@@ -1,7 +1,6 @@
-import * as fs from 'fs';
 import * as path from 'path';
 
-import migrate from './migrate';
+import * as m from './migrations';
 import { readJSON } from './utils';
 
 export = function run() {
@@ -20,5 +19,14 @@ export = function run() {
     return;
   }
 
-  migrate(content, structure);
+  const {
+    minPages,
+    maxPages,
+    minSectionsPerPage,
+    maxSectionsPerPage,
+  } = structure.settings;
+
+  m.removePages(content, maxPages);
+  // addPages(content, minPages, structure);
+  m.removePageSections(content, maxSectionsPerPage);
 }
