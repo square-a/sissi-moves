@@ -1,0 +1,43 @@
+{
+  "name": "sissi-moves",
+  "description": "Content migration for sissi (simple static sites)",
+  "version": "0.0.1",
+  "author": "Alex Kott @AlexKott",
+  "bin": {
+    "sissi": "./bin/run"
+  },
+  "bugs": "https://github.com/square-a/sissi-moves/issues",
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "@types/node": "^10.3.3",
+    "ts-node": "^6.1.1",
+    "tslib": "^1.9.2",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib"
+  ],
+  "homepage": "https://github.com/square-a/sissi-moves",
+  "keywords": [
+    "sissi",
+    "react",
+    "static-site-generator"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "bin": "sissi-moves"
+  },
+  "repository": "square-a/sissi-moves",
+  "scripts": {
+    "prepare": "rm -rf lib && tsc && cp -r src/templates lib/templates"
+  },
+  "types": "lib/index.d.ts"
+}
