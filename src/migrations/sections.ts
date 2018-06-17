@@ -92,12 +92,13 @@ export function removeUnusedSections(content) {
   sectionsToRemove.forEach(section => {
     delete content.sections[section];
   });
-
-  logger.add({
-    item: `Unused ${pluralize('section', sectionsToRemove)} %=s%`,
-    prefix: c.LIST_ITEM,
-    interpolations: { s: { str: sectionsToRemove.join(', '), lvl: 3 }}
-  });
+  if (sectionsToRemove.length) {
+    logger.add({
+      item: `Unused ${pluralize('section', sectionsToRemove)} %=s%`,
+      prefix: c.LIST_ITEM,
+      interpolations: { s: { str: sectionsToRemove.join(', '), lvl: 3 }}
+    });
+  }
 }
 
 function getPageSections(content, pageId) {

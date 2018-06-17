@@ -19,7 +19,7 @@ export = async function run() {
     return;
   }
 
-  const { error: cntError, file: content } = readJSON(contentPath);
+  const { error: cntError, file: content } = readJSON(contentPath, true);
   if (cntError) {
     console.log(cntError);
     return;
@@ -31,6 +31,12 @@ export = async function run() {
     minSectionsPerPage,
     maxSectionsPerPage,
   } = structure.settings;
+
+  const isInitialContent = JSON.stringify(content) === '{}';
+
+  content.meta = content.meta || {};
+  content.pages = content.pages || [];
+  content.sections = content.sections || {};
 
   let hasChanges = false;
 
@@ -85,7 +91,7 @@ export = async function run() {
         name: 'backup',
         message: 'Do you want me to create a backup file?',
         default: true,
-        when: a => a.confirm,
+        when: a => !isInitialContent && a.confirm,
       },
     ]);
 
