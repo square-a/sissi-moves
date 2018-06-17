@@ -1,6 +1,6 @@
 import * as c from '../constants';
 import logger from '../logger';
-import { getContentId } from '../utils';
+import { getContentId, pluralize } from '../utils';
 
 export function addPages(content, minPages, structure) {
   if (content.pages.length < minPages) {
@@ -20,7 +20,7 @@ export function addPages(content, minPages, structure) {
     }
 
     logger(
-      '%=p% new page(s) [%=pid%]',
+      `%=p% new ${pluralize('page', pagesToAdd)} [%=pid%]`,
       c.LIST_ITEM,
       { p: { str: pagesToAdd.length, lvl: 1 }, pid: { str: pagesToAdd.join(', '), lvl: 1 }}
     );
@@ -36,7 +36,7 @@ export function removePages(content, maxPages) {
     }
 
     logger(
-      'Page(s) %=p%',
+      `${pluralize('Page', pagesToRemove)} %=p%`,
       c.LIST_ITEM,
       { p: { str: pagesToRemove.join(', '), lvl: 3 }}
     );

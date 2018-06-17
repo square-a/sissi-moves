@@ -3,7 +3,7 @@ import _get = require('lodash.get');
 
 import * as c from '../constants';
 import logger from '../logger';
-import { getContentId } from '../utils';
+import { getContentId, pluralize } from '../utils';
 
 export function addSections(content, minSections, structure) {
   content.pages.forEach(page => {
@@ -34,7 +34,7 @@ export function addSections(content, minSections, structure) {
       }
 
       logger(
-        '%=s% new section(s) to page %=p%',
+        `%=s% new ${pluralize('section', sectionsToAdd)} to page %=p%`,
         c.LIST_ITEM,
         { s: { str: sectionsToAdd.toString(), lvl: 1 }, p: { str: page.id, lvl: 2 }}
       );
@@ -72,7 +72,7 @@ export function removePageSections(content, maxSections, structure) {
 
       const sections = sectionsToRemove.join(', ');
       logger(
-        'Section(s) %=s% from page %=p%',
+        `${pluralize('Section', sectionsToRemove)} %=s% from page %=p%`,
         c.LIST_ITEM,
         { s: { str: sections, lvl: 3 }, p: { str: page.id, lvl: 2 }}
       );

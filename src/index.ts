@@ -36,6 +36,7 @@ export = function run() {
   m.removePageSections(content, maxSectionsPerPage, structure);
   m.removeMetaFields(content, structure);
   m.removePageFields(content, structure);
+  m.removeSectionFields(content, structure);
 
   logger('');
   logger('Sissi will add the following:'.toUpperCase());

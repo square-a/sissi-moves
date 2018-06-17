@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-export function readJSON(path) {
+export function readJSON(path : string) {
   try {
     const file = fs.readFileSync(path);
     return { error: false, file: JSON.parse(file.toString()) };
@@ -16,4 +16,12 @@ export function readJSON(path) {
 
 export function getContentId() {
   return Math.random().toString(36).substring(2, 9);
+}
+
+export function pluralize(str : string, amount : number | any[]) {
+  if (typeof amount !== 'number') {
+    amount = amount.length;
+  }
+
+  return amount > 1 ? `${str}s` : str;
 }
