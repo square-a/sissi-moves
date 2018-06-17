@@ -1,5 +1,7 @@
 import * as path from 'path';
 
+import * as c from './constants';
+import logger from './logger';
 import * as m from './migrations';
 import { readJSON } from './utils';
 
@@ -26,9 +28,18 @@ export = function run() {
     maxSectionsPerPage,
   } = structure.settings;
 
+  logger('');
+  logger('Sissi will remove the following:'.toUpperCase());
+  logger(c.DIVIDER_LINE);
+
   m.removePages(content, maxPages);
   m.removePageSections(content, maxSectionsPerPage, structure);
-  m.removeFields(content, structure);
+  m.removeMetaFields(content, structure);
+  m.removePageFields(content, structure);
+
+  logger('');
+  logger('Sissi will add the following:'.toUpperCase());
+  logger(c.DIVIDER_LINE);
 
   m.addPages(content, minPages, structure);
   m.addSections(content, minSectionsPerPage, structure);

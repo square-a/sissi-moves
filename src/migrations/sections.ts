@@ -34,7 +34,8 @@ export function addSections(content, minSections, structure) {
       }
 
       logger(
-        '%=s% new section(s) will be added to page %=p%',
+        '%=s% new section(s) to page %=p%',
+        c.LIST_ITEM,
         { s: { str: sectionsToAdd.toString(), lvl: 1 }, p: { str: page.id, lvl: 2 }}
       );
     }
@@ -62,7 +63,8 @@ export function removePageSections(content, maxSections, structure) {
         if (!hasRemoved) {
           logger(
             'Page %=p% has too many required sections. Can\'t remove them. %=c%',
-            { p: { str: page.id, lvl: 3 }, c: { str: c.CHECK_MANUALLY, lvl: 3 }}
+            c.LIST_ITEM,
+            { p: { str: page.id, lvl: 4 }, c: { str: c.CHECK_MANUALLY, lvl: 4 }}
           );
           return;
         }
@@ -70,7 +72,8 @@ export function removePageSections(content, maxSections, structure) {
 
       const sections = sectionsToRemove.join(', ');
       logger(
-        'Section(s) %=s% will be removed from page %=p%',
+        'Section(s) %=s% from page %=p%',
+        c.LIST_ITEM,
         { s: { str: sections, lvl: 3 }, p: { str: page.id, lvl: 2 }}
       );
     }

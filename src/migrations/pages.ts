@@ -20,7 +20,8 @@ export function addPages(content, minPages, structure) {
     }
 
     logger(
-      '%=p% new page(s) will be added (%=pid%)',
+      '%=p% new page(s) [%=pid%]',
+      c.LIST_ITEM,
       { p: { str: pagesToAdd.length, lvl: 1 }, pid: { str: pagesToAdd.join(', '), lvl: 1 }}
     );
   }
@@ -35,7 +36,8 @@ export function removePages(content, maxPages) {
     }
 
     logger(
-      'Page(s) %=p% will be removed',
+      'Page(s) %=p%',
+      c.LIST_ITEM,
       { p: { str: pagesToRemove.join(', '), lvl: 3 }}
     );
   }

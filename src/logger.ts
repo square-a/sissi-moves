@@ -5,11 +5,13 @@ const levelColors = {
   1: 'green',
   2: 'yellow',
   3: 'redBright',
+  4: 'magentaBright',
 };
 
 export default function logger(
   item : string,
-  interpolations? : { [key : string]: { str : string | number, lvl: number }}
+  prefix : string = '',
+  interpolations? : { [key : string]: { str : string | number, lvl: number }},
 ) {
   let newLog = item;
 
@@ -22,5 +24,5 @@ export default function logger(
       newLog = newLog.replace(lookup, replacement);
     });
   }
-  console.log(`-- ${newLog}`);
+  console.log(prefix + newLog);
 }
