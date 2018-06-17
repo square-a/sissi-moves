@@ -36,6 +36,7 @@ export = async function run() {
 
   m.removePages(content, maxPages);
   m.removePageSections(content, maxSectionsPerPage, structure);
+  m.removeUnusedSections(content);
   m.removeMetaFields(content, structure);
   m.removePageFields(content, structure);
   m.removeSectionFields(content, structure);
@@ -97,6 +98,6 @@ export = async function run() {
       return;
     }
   }
-  
+
   logger.log({ item: 'Nothing changed.' });
 }

@@ -85,6 +85,21 @@ export function removePageSections(content, maxSections, structure) {
   });
 }
 
+export function removeUnusedSections(content) {
+  const sectionsToRemove = Object.keys(content.sections)
+    .filter(section => !content.pages.some(page => page.sections.includes(section)));
+
+  sectionsToRemove.forEach(section => {
+    delete content.sections[section];
+  });
+
+  logger.add({
+    item: `Unused ${pluralize('section', sectionsToRemove)} %=s%`,
+    prefix: c.LIST_ITEM,
+    interpolations: { s: { str: sectionsToRemove.join(', '), lvl: 3 }}
+  });
+}
+
 function getPageSections(content, pageId) {
   const page = content.pages.find(p => p.id === pageId) || {};
   const sectionIds = page.sections || [];
