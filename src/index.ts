@@ -29,7 +29,7 @@ export = function run() {
   } = structure.settings;
 
   logger('');
-  logger('Sissi will remove the following:'.toUpperCase());
+  logger('Sissi will %=R% the following:'.toUpperCase(), '', { R: { str: 'REMOVE', lvl: 3 }});
   logger(c.DIVIDER_LINE);
 
   m.removePages(content, maxPages);
@@ -39,10 +39,12 @@ export = function run() {
   m.removeSectionFields(content, structure);
 
   logger('');
-  logger('Sissi will add the following:'.toUpperCase());
+  logger('Sissi will add the following:'.toUpperCase(), '', { r: { str: 'add', lvl: 1 }});
   logger(c.DIVIDER_LINE);
 
   m.addPages(content, minPages, structure);
   m.addSections(content, minSectionsPerPage, structure);
-
+  m.addMetaFields(content, structure);
+  m.addPageFields(content, structure);
+  m.addSectionFields(content, structure);
 }

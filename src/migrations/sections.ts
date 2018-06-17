@@ -9,34 +9,37 @@ export function addSections(content, minSections, structure) {
   content.pages.forEach(page => {
     page.sections = page.sections || [];
     if (page.sections.length < minSections) {
-      let sectionsToAdd = 0;
+      let sectionsToAdd : string[] = [];
       let hasMissingSections;
 
       while(page.sections.length < minSections || hasMissingSections) {
         hasMissingSections = false;
         const missingSectionTypes = getMissingSectionTypes(content, page.id, structure);
-        const sectionType = missingSectionTypes.pop() || c.STANDARD_PAGE_TYPE;
+        const sectionType = missingSectionTypes.pop() || c.STANDARD_SECTION_TYPE;
 
         if (missingSectionTypes.length) {
           hasMissingSections = true;
         }
+        const sectionId = getContentId();
 
-        const newPage = {
-          id: getContentId(),
+        const newSection = {
+          id: sectionId,
           type: sectionType,
         };
 
-        const { fields } = structure.pages[newPage.type];
-        fields.forEach(field => newPage[field] = '');
-
-        page.sections.push(newPage);
-        sectionsToAdd += 1;
+        content.sections[sectionId] = newSection;
+        page.sections.push(sectionId);
+        sectionsToAdd.push(sectionId);
       }
 
       logger(
-        `%=s% new ${pluralize('section', sectionsToAdd)} to page %=p%`,
+        `%=s% new ${pluralize('section', sectionsToAdd)} to page %=p% [%=sid%]`,
         c.LIST_ITEM,
-        { s: { str: sectionsToAdd.toString(), lvl: 1 }, p: { str: page.id, lvl: 2 }}
+        {
+          s: { str: sectionsToAdd.length, lvl: 1 },
+          p: { str: page.id, lvl: 2 },
+          sid: { str: sectionsToAdd.join(', '), lvl: 1 },
+        }
       );
     }
   });

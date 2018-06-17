@@ -1,6 +1,5 @@
 export const STANDARD_PAGE_TYPE = 'standard';
-export const CHECK_MANUALLY = '<-- Check this manually!';
-
+export const STANDARD_SECTION_TYPE = 'standard';
 export const ALLOWED_FIELDS = [
   'id',
   'pageType',
@@ -8,5 +7,6 @@ export const ALLOWED_FIELDS = [
   'sections'
 ];
 
+export const CHECK_MANUALLY = '<-- Check this manually!';
 export const DIVIDER_LINE = '································';
 export const LIST_ITEM = '· ';

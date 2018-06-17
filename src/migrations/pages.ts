@@ -12,9 +12,6 @@ export function addPages(content, minPages, structure) {
         type: c.STANDARD_PAGE_TYPE,
       };
 
-      const { fields } = structure.pages[newPage.type];
-      fields.forEach(field => newPage[field] = '');
-
       content.pages.push(newPage);
       pagesToAdd.push(newPage.id);
     }
