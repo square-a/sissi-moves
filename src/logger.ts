@@ -9,13 +9,13 @@ const levelColors = {
 
 export default function logger(
   item : string,
-  interpolations? : { [key : string]: { str : string, level: number }}
+  interpolations? : { [key : string]: { str : string, lvl: number }}
 ) {
   let newLog = item;
 
   if (interpolations) {
     Object.entries(interpolations).forEach(([key, int]) => {
-      const color = levelColors[int.level];
+      const color = levelColors[int.lvl];
       const lookup = `%=${key}%`;
       const replacement = chalk.bold[color](int.str);
 

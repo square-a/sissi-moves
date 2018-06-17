@@ -1,5 +1,5 @@
-import * as _cloneDeep from 'lodash.clonedeep';
-import * as _get from 'lodash.get';
+import _cloneDeep = require('lodash.clonedeep');
+import _get = require('lodash.get');
 
 import * as c from '../constants';
 import logger from '../logger';
@@ -35,7 +35,7 @@ export function addSections(content, minSections, structure) {
 
       logger(
         `%=s% new section(s) will be added to page %=p%`,
-        { s: { str: sectionsToAdd.toString(), level: 1 }, p: { str: page.id, level: 2 }}
+        { s: { str: sectionsToAdd.toString(), lvl: 1 }, p: { str: page.id, lvl: 2 }}
       );
     }
   });
@@ -62,7 +62,7 @@ export function removePageSections(content, maxSections, structure) {
         if (!hasRemoved) {
           logger(
             `Page %=p% has too many required sections. Can\'t remove them automatically. %=c%`,
-            { p: { str: page.id, level: 3 }, c: { str: c.CHECK_MANUALLY, level: 3 }}
+            { p: { str: page.id, lvl: 3 }, c: { str: c.CHECK_MANUALLY, lvl: 3 }}
           );
           return;
         }
@@ -71,7 +71,7 @@ export function removePageSections(content, maxSections, structure) {
       const sections = sectionsToRemove.join(', ');
       logger(
         `Section(s) %=s% will be removed from page %=p%`,
-        { s: { str: sections, level: 3 }, p: { str: page.id, level: 2 }}
+        { s: { str: sections, lvl: 3 }, p: { str: page.id, lvl: 2 }}
       );
     }
   });

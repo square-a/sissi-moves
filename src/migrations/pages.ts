@@ -21,7 +21,7 @@ export function addPages(content, minPages, structure) {
 
     logger(
       `%=p% new page(s) will be added.`,
-      { p: { str: pagesToAdd.toString(), level: 1 }}
+      { p: { str: pagesToAdd.toString(), lvl: 1 }}
     );
   }
 }
@@ -36,7 +36,7 @@ export function removePages(content, maxPages) {
 
     logger(
       `Page(s) %=p% will be removed`,
-      { p: { str: pagesToRemove.join(', '), level: 3 }}
+      { p: { str: pagesToRemove.join(', '), lvl: 3 }}
     );
   }
 }

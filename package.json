@@ -10,13 +10,13 @@
   "dependencies": {
     "chalk": "^2.4.1",
     "lodash.clonedeep": "^4.5.0",
-    "lodash.get": "^4.4.2",
-    "winston": "^3.0.0"
+    "lodash.get": "^4.4.2"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
+    "@types/lodash.clonedeep": "^4.5.3",
+    "@types/lodash.get": "^4.4.3",
     "@types/node": "^10.3.3",
-    "@types/winston": "^2.3.9",
     "ts-node": "^6.1.1",
     "tslib": "^1.9.2",
     "tslint": "^5.10.0",
