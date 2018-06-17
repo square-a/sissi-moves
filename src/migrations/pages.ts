@@ -4,7 +4,7 @@ import { getContentId } from '../utils';
 
 export function addPages(content, minPages, structure) {
   if (content.pages.length < minPages) {
-    let pagesToAdd = 0;
+    const pagesToAdd : string[] = [];
 
     while(content.pages.length < minPages) {
       const newPage = {
@@ -16,12 +16,12 @@ export function addPages(content, minPages, structure) {
       fields.forEach(field => newPage[field] = '');
 
       content.pages.push(newPage);
-      pagesToAdd += 1;
+      pagesToAdd.push(newPage.id);
     }
 
     logger(
-      `%=p% new page(s) will be added.`,
-      { p: { str: pagesToAdd.toString(), lvl: 1 }}
+      `%=p% new page(s) will be added (%=pid%)`,
+      { p: { str: pagesToAdd.length, lvl: 1 }, pid: { str: pagesToAdd.join(', '), lvl: 1 }}
     );
   }
 }

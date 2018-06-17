@@ -9,7 +9,7 @@ const levelColors = {
 
 export default function logger(
   item : string,
-  interpolations? : { [key : string]: { str : string, lvl: number }}
+  interpolations? : { [key : string]: { str : string | number, lvl: number }}
 ) {
   let newLog = item;
 
