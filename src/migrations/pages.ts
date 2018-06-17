@@ -1,6 +1,8 @@
 import * as c from '../constants';
-import logger from '../logger';
+import Logger from '../logger';
 import { getContentId, pluralize } from '../utils';
+
+const logger = new Logger();
 
 export function addPages(content, minPages, structure) {
   if (content.pages.length < minPages) {
@@ -9,18 +11,18 @@ export function addPages(content, minPages, structure) {
     while(content.pages.length < minPages) {
       const newPage = {
         id: getContentId(),
-        type: c.STANDARD_PAGE_TYPE,
+        pageType: c.STANDARD_PAGE_TYPE,
       };
 
       content.pages.push(newPage);
       pagesToAdd.push(newPage.id);
     }
 
-    logger(
-      `%=p% new ${pluralize('page', pagesToAdd)} [%=pid%]`,
-      c.LIST_ITEM,
-      { p: { str: pagesToAdd.length, lvl: 1 }, pid: { str: pagesToAdd.join(', '), lvl: 1 }}
-    );
+    logger.add({
+      item: `%=p% new ${pluralize('page', pagesToAdd)} [%=pid%]`,
+      prefix: c.LIST_ITEM,
+      interpolations: { p: { str: pagesToAdd.length, lvl: 1 }, pid: { str: pagesToAdd.join(', '), lvl: 1 }}
+    });
   }
 }
 
@@ -32,10 +34,10 @@ export function removePages(content, maxPages) {
       pagesToRemove.push(removedPage);
     }
 
-    logger(
-      `${pluralize('Page', pagesToRemove)} %=p%`,
-      c.LIST_ITEM,
-      { p: { str: pagesToRemove.join(', '), lvl: 3 }}
-    );
+    logger.add({
+      item: `${pluralize('Page', pagesToRemove)} %=p%`,
+      prefix: c.LIST_ITEM,
+      interpolations: { p: { str: pagesToRemove.join(', '), lvl: 3 }}
+    });
   }
 }

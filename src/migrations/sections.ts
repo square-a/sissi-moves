@@ -2,8 +2,10 @@ import _cloneDeep = require('lodash.clonedeep');
 import _get = require('lodash.get');
 
 import * as c from '../constants';
-import logger from '../logger';
+import Logger from '../logger';
 import { getContentId, pluralize } from '../utils';
+
+const logger = new Logger();
 
 export function addSections(content, minSections, structure) {
   content.pages.forEach(page => {
@@ -24,7 +26,7 @@ export function addSections(content, minSections, structure) {
 
         const newSection = {
           id: sectionId,
-          type: sectionType,
+          sectionType: sectionType,
         };
 
         content.sections[sectionId] = newSection;
@@ -32,15 +34,15 @@ export function addSections(content, minSections, structure) {
         sectionsToAdd.push(sectionId);
       }
 
-      logger(
-        `%=s% new ${pluralize('section', sectionsToAdd)} to page %=p% [%=sid%]`,
-        c.LIST_ITEM,
-        {
+      logger.add({
+        item: `%=s% new ${pluralize('section', sectionsToAdd)} to page %=p% [%=sid%]`,
+        prefix: c.LIST_ITEM,
+        interpolations: {
           s: { str: sectionsToAdd.length, lvl: 1 },
           p: { str: page.id, lvl: 2 },
           sid: { str: sectionsToAdd.join(', '), lvl: 1 },
         }
-      );
+      });
     }
   });
 }
@@ -64,21 +66,21 @@ export function removePageSections(content, maxSections, structure) {
         }
 
         if (!hasRemoved) {
-          logger(
-            'Page %=p% has too many required sections. Can\'t remove them. %=c%',
-            c.LIST_ITEM,
-            { p: { str: page.id, lvl: 4 }, c: { str: c.CHECK_MANUALLY, lvl: 4 }}
-          );
+          logger.add({
+            item: 'Page %=p% has too many required sections. Can\'t remove them. %=c%',
+            prefix: c.LIST_ITEM,
+            interpolations: { p: { str: page.id, lvl: 4 }, c: { str: c.CHECK_MANUALLY, lvl: 4 }}
+          });
           return;
         }
       }
 
       const sections = sectionsToRemove.join(', ');
-      logger(
-        `${pluralize('Section', sectionsToRemove)} %=s% from page %=p%`,
-        c.LIST_ITEM,
-        { s: { str: sections, lvl: 3 }, p: { str: page.id, lvl: 2 }}
-      );
+      logger.add({
+        item: `${pluralize('Section', sectionsToRemove)} %=s% from page %=p%`,
+        prefix: c.LIST_ITEM,
+        interpolations: { s: { str: sections, lvl: 3 }, p: { str: page.id, lvl: 2 }}
+      });
     }
   });
 }

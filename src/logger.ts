@@ -1,5 +1,9 @@
 import chalk from 'chalk';
 
+interface interpolationOpts {
+  [key : string]: { str : string | number, lvl: number }
+}
+
 const levelColors = {
   0: 'white',
   1: 'green',
@@ -8,21 +12,52 @@ const levelColors = {
   4: 'magentaBright',
 };
 
-export default function logger(
-  item : string,
-  prefix : string = '',
-  interpolations? : { [key : string]: { str : string | number, lvl: number }},
-) {
-  let newLog = item;
+let instance;
 
-  if (interpolations) {
-    Object.entries(interpolations).forEach(([key, int]) => {
-      const color = levelColors[int.lvl];
-      const lookup = `%=${key}%`;
-      const replacement = chalk.bold[color](int.str);
+export default class Logger {
+  private list : string[] = [];
 
-      newLog = newLog.replace(lookup, replacement);
-    });
+  constructor() {
+    if (!instance) {
+      instance = this;
+    }
+
+    return instance;
   }
-  console.log(prefix + newLog);
+
+  add(options : { item: string, prefix? : string, interpolations? : interpolationOpts }) {
+    this.list.push(this.getString(options));
+  }
+
+  log(options : { item: string, prefix? : string, interpolations? : interpolationOpts }) {
+    const logString = this.getString(options);
+    console.log(logString);
+  }
+
+  logList() {
+    while (this.list.length) {
+      console.log(this.list.shift());
+    }
+  }
+
+  getListLength() {
+    return this.list.length;
+  }
+
+  private getString(options : { item: string, prefix? : string, interpolations? : interpolationOpts }) {
+    const { item, prefix = '', interpolations } = options;
+    let newLog = item;
+
+    if (interpolations) {
+      Object.entries(interpolations).forEach(([key, int]) => {
+        const color = levelColors[int.lvl];
+        const lookup = `%=${key}%`;
+        const replacement = chalk.bold[color](int.str);
+
+        newLog = newLog.replace(lookup, replacement);
+      });
+    }
+
+    return prefix + newLog;
+  }
 }
