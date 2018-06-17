@@ -1,7 +1,7 @@
 {
   "name": "sissi-moves",
   "description": "Content migration for sissi (simple static sites)",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "author": "Alex Kott @AlexKott",
   "bin": {
     "sissi-moves": "./bin/run"
