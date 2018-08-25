@@ -1,7 +1,7 @@
 {
   "name": "sissi-moves",
   "description": "Content migration for sissi (simple static sites)",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "license": "GPL-3.0-or-later",
   "repository": "square-a/sissi-moves",
   "author": "A Square",
@@ -24,7 +24,8 @@
     "chalk": "^2.4.1",
     "inquirer": "^6.0.0",
     "lodash.clonedeep": "^4.5.0",
-    "lodash.get": "^4.4.2"
+    "lodash.get": "^4.4.2",
+    "minimist": "^1.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
