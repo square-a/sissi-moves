@@ -1,9 +1,2 @@
-*-debug.log
-*-error.log
 /lib
-/tmp
-/yarn.lock
 node_modules
-content.json
-content.backup.json
-structure.json
