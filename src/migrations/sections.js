@@ -1,5 +1,5 @@
-import _cloneDeep = require('lodash.clonedeep');
-import _get = require('lodash.get');
+import _cloneDeep from 'lodash.clonedeep';
+import _get from 'lodash.get';
 
 import * as c from '../constants';
 import Logger from '../logger';
@@ -11,7 +11,7 @@ export function addSections(content, minSections, structure) {
   content.pages.forEach(page => {
     page.sections = page.sections || [];
     if (page.sections.length < minSections) {
-      let sectionsToAdd : string[] = [];
+      let sectionsToAdd = [];
       let hasMissingSections;
 
       while(page.sections.length < minSections || hasMissingSections) {
@@ -52,7 +52,7 @@ export function removePageSections(content, maxSections, structure) {
     if (page.sections.length > maxSections) {
       const requiredSectionTypes = getRequiredSectionTypes(structure, page.pageType);
       const pageSections = getPageSections(content, page.id);
-      const sectionsToRemove : string[] = [];
+      const sectionsToRemove = [];
 
       while(page.sections.length > maxSections) {
         let hasRemoved = false;

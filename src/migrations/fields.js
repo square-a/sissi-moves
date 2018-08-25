@@ -36,7 +36,7 @@ export function addPageFields(content, structure) {
   });
 }
 
-export function addSectionFields(content : { sections : { [key : string] : { sectionType: string }}}, structure) {
+export function addSectionFields(content, structure) {
   Object.entries(content.sections).forEach(([id, section]) => {
     const sectionType = section.sectionType || c.STANDARD_SECTION_TYPE;
     const sectionFields = structure.sections[sectionType].fields || [];
@@ -87,7 +87,7 @@ export function removePageFields(content, structure) {
   });
 }
 
-export function removeSectionFields(content : { sections : { [key : string] : { sectionType: string }}}, structure) {
+export function removeSectionFields(content, structure) {
   Object.entries(content.sections).forEach(([id, section]) => {
     const sectionType = section.sectionType || c.STANDARD_SECTION_TYPE;
     const sectionFields = structure.sections[sectionType].fields;

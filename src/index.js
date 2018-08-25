@@ -1,6 +1,6 @@
 import { prompt } from 'inquirer';
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 
 import * as c from './constants';
 import Logger from './logger';
@@ -9,7 +9,7 @@ import { readJSON } from './utils';
 
 const logger = new Logger();
 
-export = async function run() {
+module.exports = async function run() {
   const contentPath = path.join(process.cwd(), 'content.json');
   const structurePath = path.join(process.cwd(), 'structure.json');
 

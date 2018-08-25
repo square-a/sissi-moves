@@ -6,7 +6,7 @@ const logger = new Logger();
 
 export function addPages(content, minPages, structure) {
   if (content.pages.length < minPages) {
-    const pagesToAdd : string[] = [];
+    const pagesToAdd = [];
 
     while(content.pages.length < minPages) {
       const newPage = {
@@ -28,9 +28,9 @@ export function addPages(content, minPages, structure) {
 
 export function removePages(content, maxPages) {
   if (content.pages.length > maxPages) {
-    const pagesToRemove : string[] = [];
+    const pagesToRemove = [];
     while(content.pages.length > maxPages) {
-      const removedPage : string = content.pages.pop().id;
+      const removedPage = content.pages.pop().id;
       pagesToRemove.push(removedPage);
     }
 

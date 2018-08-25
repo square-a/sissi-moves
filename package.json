@@ -1,46 +1,45 @@
 {
   "name": "sissi-moves",
   "description": "Content migration for sissi (simple static sites)",
-  "version": "0.5.0",
-  "author": "Alex Kott @AlexKott",
+  "version": "0.5.1",
+  "license": "GPL-3.0-or-later",
+  "repository": "square-a/sissi-moves",
+  "author": "A Square",
+  "contributors": [
+    "Alex Kott",
+    "Alina Beck"
+  ],
+  "keywords": [
+    "sissi",
+    "react",
+    "static-site-generator"
+  ],
+  "main": "lib/index.js",
   "bin": {
     "sissi-moves": "./bin/run"
   },
   "bugs": "https://github.com/square-a/sissi-moves/issues",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0-rc.2",
     "chalk": "^2.4.1",
     "inquirer": "^6.0.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.get": "^4.4.2"
   },
   "devDependencies": {
-    "@types/chalk": "^2.2.0",
-    "@types/lodash.clonedeep": "^4.5.3",
-    "@types/lodash.get": "^4.4.3",
-    "@types/node": "^10.3.3",
-    "ts-node": "^6.1.1",
-    "tslib": "^1.9.2",
-    "tslint": "^5.10.0",
-    "typescript": "^2.9.2"
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015-node5": "^1.2.0"
   },
-  "engines": {
-    "node": ">=8.0.0"
+  "babel": {
+    "presets": [
+      "babel-preset-es2015-node5"
+    ]
   },
-  "files": [
-    "/bin",
-    "/lib"
-  ],
-  "homepage": "https://github.com/square-a/sissi-moves",
-  "keywords": [
-    "sissi",
-    "react",
-    "static-site-generator"
-  ],
-  "license": "MIT",
-  "main": "lib/index.js",
-  "repository": "square-a/sissi-moves",
   "scripts": {
-    "prepare": "rm -rf lib && tsc"
-  },
-  "types": "lib/index.d.ts"
+    "clear": "rm -rf ./lib && mkdir ./lib",
+    "prepare": "npm run clear && npm run transpile",
+    "start": "npm run clear && npm run watch",
+    "transpile": "./node_modules/.bin/babel src -d lib",
+    "watch": "./node_modules/.bin/babel src -d lib --watch"
+  }
 }

@@ -1,9 +1,5 @@
 import chalk from 'chalk';
 
-interface interpolationOpts {
-  [key : string]: { str : string | number, lvl: number }
-}
-
 const levelColors = {
   0: 'white',
   1: 'green',
@@ -15,21 +11,20 @@ const levelColors = {
 let instance;
 
 export default class Logger {
-  private list : string[] = [];
-
   constructor() {
     if (!instance) {
+      this.list = [];
       instance = this;
     }
 
     return instance;
   }
 
-  add(options : { item: string, prefix? : string, interpolations? : interpolationOpts }) {
+  add(options) {
     this.list.push(this.getString(options));
   }
 
-  log(options : { item: string, prefix? : string, interpolations? : interpolationOpts }) {
+  log(options) {
     const logString = this.getString(options);
     console.log(logString);
   }
@@ -44,7 +39,7 @@ export default class Logger {
     return this.list.length;
   }
 
-  private getString(options : { item: string, prefix? : string, interpolations? : interpolationOpts }) {
+  getString(options) {
     const { item, prefix = '', interpolations } = options;
     let newLog = item;
 
