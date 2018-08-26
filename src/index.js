@@ -2,13 +2,21 @@ import hashStructure from './hashStructure';
 import migrate from './migrate';
 
 module.exports = async function run(args, flags) {
-  switch(args[0]) {
+  const [ command ] = args;
+  const {
+    doSave = false,
+  } = flags;
+
+  switch(command) {
+    case 'migrate':
+      migrate();
+      return;
+
     case 'hash':
-      hashStructure(flags);
+      hashStructure(doSave);
       return;
 
     default:
-      migrate(flags);
       return;
   }
 }
