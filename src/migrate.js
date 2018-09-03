@@ -34,7 +34,7 @@ export default async function migrate() {
 
   const isInitialContent = JSON.stringify(content) === '{}';
 
-  content.meta = content.meta || {};
+  content.global = content.global || {};
   content.pages = content.pages || [];
   content.sections = content.sections || {};
 
@@ -43,7 +43,7 @@ export default async function migrate() {
   m.removePages(content, maxPages);
   m.removePageSections(content, maxSectionsPerPage, structure);
   m.removeUnusedSections(content);
-  m.removeMetaFields(content, structure);
+  m.removeGlobalFields(content, structure);
   m.removePageFields(content, structure);
   m.removeSectionFields(content, structure);
 
@@ -61,7 +61,7 @@ export default async function migrate() {
 
   m.addPages(content, minPages, structure);
   m.addSections(content, minSectionsPerPage, structure);
-  m.addMetaFields(content, structure);
+  m.addGlobalFields(content, structure);
   m.addPageFields(content, structure);
   m.addSectionFields(content, structure);
 

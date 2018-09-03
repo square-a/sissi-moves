@@ -4,14 +4,14 @@ import { pluralize } from '../utils';
 
 const logger = new Logger();
 
-export function addMetaFields(content, structure) {
-  const fieldsToAdd = getFieldsToAdd(content.meta, structure.meta.fields);
+export function addGlobalFields(content, structure) {
+  const fieldsToAdd = getFieldsToAdd(content.global, structure.global.fields);
 
   if (fieldsToAdd.length) {
-    fieldsToAdd.forEach(field => content.meta[field] = '');
+    fieldsToAdd.forEach(field => content.global[field] = '');
 
     logger.add({
-      item: `${pluralize('Field', fieldsToAdd)} %=f% to meta content`,
+      item: `${pluralize('Field', fieldsToAdd)} %=f% to global content`,
       prefix: c.LIST_ITEM,
       interpolations: { f: { str: fieldsToAdd.join(', '), lvl: 1 }}
     });
@@ -54,14 +54,14 @@ export function addSectionFields(content, structure) {
   });
 }
 
-export function removeMetaFields(content, structure) {
-  const fieldsToRemove = getFieldsToRemove(content.meta, structure.meta.fields);
+export function removeGlobalFields(content, structure) {
+  const fieldsToRemove = getFieldsToRemove(content.global, structure.global.fields);
 
   if (fieldsToRemove.length) {
-    fieldsToRemove.forEach(field => delete content.meta[field]);
+    fieldsToRemove.forEach(field => delete content.global[field]);
 
     logger.add({
-      item: `${pluralize('Field', fieldsToRemove)} %=f% from meta content`,
+      item: `${pluralize('Field', fieldsToRemove)} %=f% from global content`,
       prefix: c.LIST_ITEM,
       interpolations: { f: { str: fieldsToRemove.join(', '), lvl: 3 }}
     });
