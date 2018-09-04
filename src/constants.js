@@ -1,3 +1,4 @@
+export const TYPE_STANDARD = 'standard';
 export const STANDARD_PAGE_TYPE = 'standard';
 export const STANDARD_SECTION_TYPE = 'standard';
 export const ALLOWED_FIELDS = [

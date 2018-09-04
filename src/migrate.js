@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import * as c from './constants';
+import Content from './Content';
 import Logger from './logger';
 import * as m from './migrations';
 import { readJSON } from './utils';
@@ -24,6 +25,10 @@ export default async function migrate() {
     console.log(cntError);
     return;
   }
+
+  const newContent = new Content(content, structure);
+
+  newContent.migratePages();
 
   const {
     minPages,
