@@ -17,6 +17,7 @@ describe('migrations/pages', () => {
       expect(result).toHaveProperty('_type', 'standard');
     });
   });
+  
   describe('getProtectedPageTypes', () => {
     it('should return an array with protected page types', () => {
       const result = migrations.getProtectedPageTypes(_testStructure.pages);

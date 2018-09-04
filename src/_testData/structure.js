@@ -17,7 +17,7 @@ export default {
   },
   global: {
     maxItems: 5,
-    minItems: 1,
+    minItems: 2,
     fields: ['title', 'image'],
   },
   pages: {
@@ -29,17 +29,17 @@ export default {
     gallery: {
       maxItems: 10,
       minItems: 4,
+      allowedItems: ['photo', 'standard'],
       fields: ['title', 'path'],
       isProtected: true,
     },
   },
   sections: {
     standard: {
-      fields: ['title'],
+      fields: ['title', 'image'],
     },
     photo: {
       fields: ['image'],
-      isProtected: true,
     },
   },
 };

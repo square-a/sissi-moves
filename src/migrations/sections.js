@@ -5,6 +5,11 @@ import * as c from '../constants';
 import Logger from '../logger';
 import { getContentId, pluralize } from '../utils';
 
+export const createSection = (type) => ({
+  _id: getContentId(),
+  _type: type || c.TYPE_STANDARD,
+});
+
 const logger = new Logger();
 
 export function addSections(content, minSections, structure) {

@@ -2,12 +2,12 @@ import * as c from '../constants';
 import Logger from '../logger';
 import { getContentId, pluralize } from '../utils';
 
-export const createPage = (type) => ({
+export const createPage = (_type = c.TYPE_STANDARD) => ({
   _id: getContentId(),
-  _type: type || c.TYPE_STANDARD,
+  _type,
 });
 
-export const getProtectedPageTypes = (pages) => Object.entries(pages)
+export const getProtectedPageTypes = pages => Object.entries(pages)
   .filter(entry => entry[1].isProtected)
   .map(entry => entry[0]);
 
