@@ -2,6 +2,15 @@ import * as c from '../constants';
 import Logger from '../logger';
 import { getContentId, pluralize } from '../utils';
 
+export const createPage = (type) => ({
+  _id: getContentId(),
+  _type: type || c.TYPE_STANDARD,
+});
+
+export const getProtectedPageTypes = (pages) => Object.entries(pages)
+  .filter(entry => entry[1].isProtected)
+  .map(entry => entry[0]);
+
 const logger = new Logger();
 
 export function addPages(content, minPages, structure) {
