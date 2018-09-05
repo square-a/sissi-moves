@@ -21,35 +21,38 @@ export default class Content {
     return this.content;
   }
 
+  _removePages(pageIdsToRemove) {
+    pageIdsToRemove.forEach(id => {
+      const pageIds = this.content.global._items;
+      const pageIndex = pageIds.findIndex(pageId => pageId === id);
+      pageIds.splice(pageIndex, 1);
+
+      delete this.content.pages[id];
+    });
+  }
+
   migratePages() {
+    this.content.global._items = this.content.global._items || [];
     const newPages = [];
-    const existingPagesArray = Object.entries(this.content.pages);
     const protectedPageTypes = pages.getProtectedPageTypes(this.structure.pages);
     const minPages = this.structure.global.minItems;
     const maxPages = this.structure.global.maxItems;
-    const validPageTypes = Object.keys(this.structure.pages);
 
-    // filter out pages with invalid types
-    const validExistingPages = existingPagesArray.filter(([id, page]) => {
-      return !!validPageTypes.find(type => type === page._type);
-    });
+    const invalidPageIds = pages.getInvalidPageIds(this.structure.pages, this.content.pages);
+    this._removePages(invalidPageIds);
 
-    this.content.global._items = validExistingPages.map(([id, page]) => id) || [];
-    this.content.pages = validExistingPages.reduce((acc, [id, page]) => {
-      acc[id] = page;
-      return acc;
-    }, {});
+    const filteredPagesArray = Object.entries(this.content.pages) || [];
 
     // create protected pages
     protectedPageTypes.forEach(type => {
-      const hasType = !!validExistingPages.find(([id, page]) => type === page._type);
+      const hasType = !!filteredPagesArray.find(([id, page]) => type === page._type);
       if (!hasType) {
         newPages.push(pages.createPage(type));
       }
     });
 
     // create minimum amount of pages
-    while (validExistingPages.length + newPages.length < minPages) {
+    while (filteredPagesArray.length + newPages.length < minPages) {
       newPages.push(pages.createPage());
     }
 

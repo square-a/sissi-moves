@@ -7,6 +7,19 @@ export const createPage = (_type = c.TYPE_STANDARD) => ({
   _type,
 });
 
+export const getInvalidPageIds = (pagesStructure, pagesContent) => {
+  const invalidPageIds = [];
+  const validPageTypes = Object.keys(pagesStructure);
+
+  Object.entries(pagesContent).forEach(([id, page]) => {
+    if (!validPageTypes.includes(page._type)) {
+      invalidPageIds.push(id);
+    }
+  })
+
+  return invalidPageIds;
+}
+
 export const getProtectedPageTypes = pages => Object.entries(pages)
   .filter(entry => entry[1].isProtected)
   .map(entry => entry[0]);
