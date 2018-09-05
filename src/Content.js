@@ -26,6 +26,7 @@ export default class Content {
     const existingPagesArray = Object.entries(this.content.pages);
     const protectedPageTypes = pages.getProtectedPageTypes(this.structure.pages);
     const minPages = this.structure.global.minItems;
+    const maxPages = this.structure.global.maxItems;
     const validPageTypes = Object.keys(this.structure.pages);
 
     // filter out pages with invalid types
@@ -59,6 +60,26 @@ export default class Content {
       acc[page._id] = page;
       return acc;
     }, this.content.pages);
+
+    // remove unprotected pages over maximum amount
+    const pagesToRemove = [];
+    const existingPages = Object.entries(this.content.pages);
+    while (existingPages.length > maxPages) {
+      let candidate = existingPages.pop();
+      while (candidate && protectedPageTypes.includes(candidate[1]._type)) {
+        candidate = existingPages.pop();
+      }
+      if (candidate) {
+        pagesToRemove.push(candidate);
+      }
+    }
+
+    pagesToRemove.forEach(([id, page]) => {
+      const pageIndex = this.content.global._items.findIndex(pageId => pageId === id);
+      this.content.global._items.splice(pageIndex, 1);
+
+      delete this.content.pages[id];
+    });
 
     return this;
   }

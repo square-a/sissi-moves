@@ -174,7 +174,7 @@ describe('Content', () => {
       });
 
       it('should remove pages over the maximum', () => {
-        testContent.global.maxItems = 1;
+        testContent.structure.global.maxItems = 1;
 
         const { global, pages } = testContent.migratePages().getContent();
 
@@ -183,11 +183,21 @@ describe('Content', () => {
       });
 
       it('should not remove pages below the maximum', () => {
+        const { global, pages } = testContent.migratePages().getContent();
 
+        expect(global._items.length).toBe(2);
+        expect(Object.entries(pages).length).toBe(2);
       });
 
       it('should never remove protected pages', () => {
+        testContent.structure.global.maxItems = 1;
 
+        const { global, pages } = testContent.migratePages().getContent();
+
+        expect(global._items.length).toBe(1);
+        expect(global._items).toContain('def345');
+        expect(Object.entries(pages).length).toBe(1);
+        expect(Object.entries(pages)[0][0]).toBe('def345');
       });
     });
   });
