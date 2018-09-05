@@ -5,7 +5,7 @@ import _testStructure from './_testData/structure';
 describe('Content', () => {
   let testContent;
 
-  describe('initialContent', () => {
+  describe('initial content', () => {
     beforeEach(() => {
       testContent = new Content({}, _testStructure);
     });
@@ -134,6 +134,23 @@ describe('Content', () => {
         expect(sections.testA).toHaveProperty('image', '');
         expect(sections.testB).toHaveProperty('title', '');
         expect(sections.testB).toHaveProperty('image', '');
+      });
+    });
+  });
+
+  describe('existing content', () => {
+    beforeEach(() => {
+      testContent = new Content(_testContent, _testStructure);
+    });
+
+    describe('migratePages', () => {
+      it('should not alter the content if all required pages exist', () => {
+        const { global, pages } = testContent.migratePages().getContent();
+
+        expect(global._items.length).toBe(2);
+        expect(Object.entries(pages).length).toBe(2);
+        expect(pages).toHaveProperty('abc123');
+        expect(pages).toHaveProperty('def345');
       });
     });
   });

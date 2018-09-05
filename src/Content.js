@@ -7,7 +7,7 @@ export default class Content {
   constructor(_content, _structure) {
     const content = _cloneDeep(_content);
     const structure = _cloneDeep(_structure);
-    
+
     content.global = content.global || {};
     content.pages = content.pages || {};
     content.sections = content.sections || {};
@@ -22,16 +22,25 @@ export default class Content {
   }
 
   migratePages() {
-    // add pages to initial content
+    this.content.global._items = this.content.global._items || [];
+    const newPages = [];
+    // TODO: move this part to pages as createNewPages() – from here...
+    const existingPagesArray = Object.entries(this.content.pages);
     const protectedPageTypes = pages.getProtectedPageTypes(this.structure.pages);
-    const newPages = protectedPageTypes.map(type => pages.createPage(type));
-
     const minPages = this.structure.global.minItems;
-    while (newPages.length < minPages) {
+
+    protectedPageTypes.forEach(type => {
+      const hasType = !!existingPagesArray.find(([id, page]) => type === page._type);
+      if (!hasType) {
+        newPages.push(pages.createPage(type));
+      }
+    });
+
+    while (existingPagesArray.length + newPages.length < minPages) {
       newPages.push(pages.createPage());
     }
-
-    this.content.global._items = newPages.map(page => page._id);
+    // ...to here
+    this.content.global._items = this.content.global._items.concat(newPages.map(page => page._id));
 
     this.content.pages = newPages.reduce((acc, page) => {
       acc[page._id] = page;
