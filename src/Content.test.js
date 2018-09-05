@@ -144,13 +144,50 @@ describe('Content', () => {
     });
 
     describe('migratePages', () => {
-      it('should not alter the content if all required pages exist', () => {
+      it('should filter out all pages with invalid page types', () => {
+        testContent.structure.pages = {
+          standard: {
+            maxItems: 6,
+            minItems: 1,
+            fields: ['title', 'path'],
+          },
+          photo: {
+            maxItems: 10,
+            minItems: 4,
+            fields: ['image', 'path'],
+          },
+        };
+
+        const { global, pages } = testContent.migratePages().getContent();
+
+        expect(global._items).not.toContain('def345');
+        expect(pages.def345).toBeUndefined();
+      });
+
+      it('should not add pages if all required pages exist', () => {
         const { global, pages } = testContent.migratePages().getContent();
 
         expect(global._items.length).toBe(2);
         expect(Object.entries(pages).length).toBe(2);
         expect(pages).toHaveProperty('abc123');
         expect(pages).toHaveProperty('def345');
+      });
+
+      it('should remove pages over the maximum', () => {
+        testContent.global.maxItems = 1;
+
+        const { global, pages } = testContent.migratePages().getContent();
+
+        expect(global._items.length).toBe(1);
+        expect(Object.entries(pages).length).toBe(1);
+      });
+
+      it('should not remove pages below the maximum', () => {
+
+      });
+
+      it('should never remove protected pages', () => {
+
       });
     });
   });

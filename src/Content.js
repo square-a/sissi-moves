@@ -22,24 +22,37 @@ export default class Content {
   }
 
   migratePages() {
-    this.content.global._items = this.content.global._items || [];
     const newPages = [];
-    // TODO: move this part to pages as createNewPages() – from here...
     const existingPagesArray = Object.entries(this.content.pages);
     const protectedPageTypes = pages.getProtectedPageTypes(this.structure.pages);
     const minPages = this.structure.global.minItems;
+    const validPageTypes = Object.keys(this.structure.pages);
 
+    // filter out pages with invalid types
+    const validExistingPages = existingPagesArray.filter(([id, page]) => {
+      return !!validPageTypes.find(type => type === page._type);
+    });
+
+    this.content.global._items = validExistingPages.map(([id, page]) => id) || [];
+    this.content.pages = validExistingPages.reduce((acc, [id, page]) => {
+      acc[id] = page;
+      return acc;
+    }, {});
+
+    // create protected pages
     protectedPageTypes.forEach(type => {
-      const hasType = !!existingPagesArray.find(([id, page]) => type === page._type);
+      const hasType = !!validExistingPages.find(([id, page]) => type === page._type);
       if (!hasType) {
         newPages.push(pages.createPage(type));
       }
     });
 
-    while (existingPagesArray.length + newPages.length < minPages) {
+    // create minimum amount of pages
+    while (validExistingPages.length + newPages.length < minPages) {
       newPages.push(pages.createPage());
     }
-    // ...to here
+
+    // add created pages to content
     this.content.global._items = this.content.global._items.concat(newPages.map(page => page._id));
 
     this.content.pages = newPages.reduce((acc, page) => {
