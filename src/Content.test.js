@@ -5,20 +5,6 @@ import _testStructure from './_testData/structure';
 describe('Content', () => {
   let testContent;
 
-  describe('_removePages', () => {
-    beforeEach(() => {
-      testContent = new Content(_testContent, _testStructure);
-    });
-
-    it('should remove the pages with the given ids', () => {
-      testContent._removePages(['abc123']);
-      const result = testContent.getContent();
-
-      expect(result.pages.abc123).toBeUndefined();
-      expect(result.global._items).not.toContain('abc123');
-    });
-  });
-
   describe('_addPages', () => {
     beforeEach(() => {
       testContent = new Content({ global: { _items: [] }}, _testStructure);
@@ -41,6 +27,26 @@ describe('Content', () => {
     });
   });
 
+  describe('_removePages', () => {
+    beforeEach(() => {
+      testContent = new Content(_testContent, _testStructure);
+    });
+
+    it('should remove the pages with the given ids from global', () => {
+      testContent._removePages(['abc123']);
+      const result = testContent.getContent();
+
+      expect(result.global._items).not.toContain('abc123');
+    });
+
+    it('should remove the pages with the given ids from pages', () => {
+      testContent._removePages(['abc123']);
+      const result = testContent.getContent();
+
+      expect(result.pages.abc123).toBeUndefined();
+    });
+  });
+
   describe('initial content', () => {
     beforeEach(() => {
       testContent = new Content({}, _testStructure);
@@ -54,13 +60,13 @@ describe('Content', () => {
         expect(pagesArray.find(p => p._type === 'gallery')).not.toBeUndefined();
       });
 
-      it('should add pages until the minimum is reached', () => {
+      it('should add the minimum amount of pages', () => {
         const { pages } = testContent.migratePages().getContent();
 
         expect(Object.keys(pages).length).toBe(2);
       });
 
-      it('should add the page ids to global', () => {
+      it('should add the new page ids to global', () => {
         const result = testContent.migratePages().getContent();
 
         expect(result.global._items.length).toBe(2);
