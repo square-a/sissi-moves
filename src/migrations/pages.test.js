@@ -50,6 +50,24 @@ describe('migrations/pages', () => {
     });
   });
 
+  describe('getPagesOverMaximum', () => {
+    it('should return an array with page ids for each page exceeding the maximum amount', () => {
+      testStructure.global.maxItems = 1;
+
+      const result = migrations.getPagesOverMaximum(testStructure, testContent.pages);
+
+      expect(result.length).toBe(1);
+    });
+
+    it('should never include protected pages', () => {
+      testStructure.pages.standard.isProtected = true;
+
+      const result = migrations.getPagesOverMaximum(testStructure, testContent.pages);
+
+      expect(result).not.toContain('abc123', 'def345');
+    });
+  });
+
   describe('getRequiredPages', () => {
     it('should return an array with the minimum amount of pages', () => {
       const result = migrations.getRequiredPages(testStructure, {});

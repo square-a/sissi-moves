@@ -24,6 +24,27 @@ export const getInvalidPageIds = (pagesStructure, pagesContent) => {
   return invalidPageIds;
 }
 
+export const getPagesOverMaximum = (structure, pagesContent) => {
+  const pagesOverMaximum = [];
+  const protectedPageTypes = _getProtectedPageTypes(structure.pages);
+  const maxAmountOfPages = structure.global.maxItems;
+  const existingPagesArray = Object.entries(pagesContent);
+
+  while (existingPagesArray.length > maxAmountOfPages) {
+    let pageToBeRemoved = existingPagesArray.pop();
+
+    while (pageToBeRemoved && protectedPageTypes.includes(pageToBeRemoved[1]._type)) {
+      pageToBeRemoved = existingPagesArray.pop();
+    }
+
+    if (pageToBeRemoved) {
+      pagesOverMaximum.push(pageToBeRemoved[0]);
+    }
+  }
+
+  return pagesOverMaximum;
+}
+
 export const getRequiredPages = (structure, pagesContent) => {
   const newPages = [];
   const protectedPageTypes = _getProtectedPageTypes(structure.pages);

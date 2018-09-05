@@ -42,8 +42,6 @@ export default class Content {
 
   migratePages() {
     this.content.global._items = this.content.global._items || [];
-    const maxPages = this.structure.global.maxItems;
-    const protectedPageTypes = pages._getProtectedPageTypes(this.structure.pages);
 
     const invalidPageIds = pages.getInvalidPageIds(this.structure.pages, this.content.pages);
     this._removePages(invalidPageIds);
@@ -51,25 +49,8 @@ export default class Content {
     const requiredPages = pages.getRequiredPages(this.structure, this.content.pages);
     this._addPages(requiredPages);
 
-    // remove unprotected pages over maximum amount
-    const pagesToRemove = [];
-    const existingPages = Object.entries(this.content.pages);
-    while (existingPages.length > maxPages) {
-      let candidate = existingPages.pop();
-      while (candidate && protectedPageTypes.includes(candidate[1]._type)) {
-        candidate = existingPages.pop();
-      }
-      if (candidate) {
-        pagesToRemove.push(candidate);
-      }
-    }
-
-    pagesToRemove.forEach(([id, page]) => {
-      const pageIndex = this.content.global._items.findIndex(pageId => pageId === id);
-      this.content.global._items.splice(pageIndex, 1);
-
-      delete this.content.pages[id];
-    });
+    const pagesOverMaximum = pages.getPagesOverMaximum(this.structure, this.content.pages);
+    this._removePages(pagesOverMaximum);
 
     return this;
   }
