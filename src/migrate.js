@@ -28,87 +28,22 @@ export default async function migrate() {
 
   const newContent = new Content(content, structure);
 
-  newContent.migratePages();
-
-  const {
-    minPages,
-    maxPages,
-    minSectionsPerPage,
-    maxSectionsPerPage,
-  } = structure.settings;
+  newContent.migratePages()
+    .migrateSections()
+    .migrateFields();
 
   const isInitialContent = JSON.stringify(content) === '{}';
+  const hasContentChanged = JSON.stringify(content) !== JSON.stringify(newContent.getContent());
 
-  content.global = content.global || {};
-  content.pages = content.pages || [];
-  content.sections = content.sections || {};
+  if (hasContentChanged) {
+    let message = 'New content.json created.';
 
-  let hasChanges = false;
-
-  m.removePages(content, maxPages);
-  m.removePageSections(content, maxSectionsPerPage, structure);
-  m.removeUnusedSections(content);
-  m.removeGlobalFields(content, structure);
-  m.removePageFields(content, structure);
-  m.removeSectionFields(content, structure);
-
-  if (logger.getListLength() > 0) {
-    hasChanges = true;
-    logger.log({ item: '' });
-    logger.log({
-      item: 'I will %=R% the following:'.toUpperCase(),
-      prefix: '',
-      interpolations: { R: { str: 'REMOVE', lvl: 3 }}
-    });
-    logger.log({ item: c.DIVIDER_LINE });
-    logger.logList();
-  }
-
-  m.addPages(content, minPages, structure);
-  m.addSections(content, minSectionsPerPage, structure);
-  m.addGlobalFields(content, structure);
-  m.addPageFields(content, structure);
-  m.addSectionFields(content, structure);
-
-  if (logger.getListLength() > 0) {
-    hasChanges = true;
-    logger.log({ item: '' });
-    logger.log({
-      item: 'I will add the following:'.toUpperCase(),
-      prefix: '',
-      interpolations: { r: { str: 'add', lvl: 1 }}
-    });
-    logger.log({ item: c.DIVIDER_LINE });
-    logger.logList();
-  }
-
-  if (hasChanges) {
-    logger.log({ item: '' });
-    const answers = await prompt([
-      {
-        type: 'confirm',
-        name: 'confirm',
-        message: 'Do you want me to save these changes?',
-        default: true,
-      },
-      {
-        type: 'confirm',
-        name: 'backup',
-        message: 'Do you want me to create a backup file?',
-        default: true,
-        when: a => !isInitialContent && a.confirm,
-      },
-    ]);
-
-    if (answers.confirm) {
-      if (answers.backup) {
-        fs.copyFileSync(contentPath, `${contentPath}.backup`);
-      }
-      fs.writeFileSync(contentPath, JSON.stringify(content, null, 2));
-      logger.log({ item: `New content.json saved.${answers.backup ? ' Backup saved as content.json.backup' : ''}` });
-      return;
+    if (!isInitialContent) {
+      fs.copyFileSync(contentPath, `${contentPath}.backup`);
+      message += ' Backup saved as content.json.backup';
     }
-  }
 
-  logger.log({ item: 'Nothing changed.' });
+    fs.writeFileSync(contentPath, JSON.stringify(newContent.getContent(), null, 2));
+    logger.log({ item: message });
+  }
 }
