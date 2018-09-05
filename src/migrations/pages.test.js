@@ -12,19 +12,27 @@ describe('migrations/pages', () => {
     testContent = _cloneDeep(_testContent);
   });
 
-  describe('createPage', () => {
+  describe('_createPage', () => {
     it('should return a page with the desired type', () => {
-      const result = migrations.createPage('gallery');
+      const result = migrations._createPage('gallery');
 
       expect(result).toHaveProperty('_id');
       expect(result).toHaveProperty('_type', 'gallery');
     });
 
     it('should return a page with the standard type if no type is specified', () => {
-      const result = migrations.createPage();
+      const result = migrations._createPage();
 
       expect(result).toHaveProperty('_id');
       expect(result).toHaveProperty('_type', 'standard');
+    });
+  });
+
+  describe('_getProtectedPageTypes', () => {
+    it('should return an array with protected page types', () => {
+      const result = migrations._getProtectedPageTypes(_testStructure.pages);
+
+      expect(result).toEqual(['gallery']);
     });
   });
 
@@ -42,11 +50,17 @@ describe('migrations/pages', () => {
     });
   });
 
-  describe('getProtectedPageTypes', () => {
-    it('should return an array with protected page types', () => {
-      const result = migrations.getProtectedPageTypes(_testStructure.pages);
+  describe('getRequiredPages', () => {
+    it('should return an array with the minimum amount of pages', () => {
+      const result = migrations.getRequiredPages(testStructure, {});
 
-      expect(result).toEqual(['gallery']);
+      expect(result.length).toBe(2);
+    });
+
+    it('should include a new page for each protected page type', () => {
+      const result = migrations.getRequiredPages(testStructure, {});
+
+      expect(result.find(page => page._type === 'gallery')).not.toBeUndefined();
     });
   });
 });

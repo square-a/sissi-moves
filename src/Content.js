@@ -21,6 +21,15 @@ export default class Content {
     return this.content;
   }
 
+  _addPages(newPages) {
+    this.content.global._items = this.content.global._items.concat(newPages.map(page => page._id));
+
+    this.content.pages = newPages.reduce((acc, page) => {
+      acc[page._id] = page;
+      return acc;
+    }, this.content.pages);
+  }
+
   _removePages(pageIdsToRemove) {
     pageIdsToRemove.forEach(id => {
       const pageIds = this.content.global._items;
@@ -33,36 +42,14 @@ export default class Content {
 
   migratePages() {
     this.content.global._items = this.content.global._items || [];
-    const newPages = [];
-    const protectedPageTypes = pages.getProtectedPageTypes(this.structure.pages);
-    const minPages = this.structure.global.minItems;
     const maxPages = this.structure.global.maxItems;
+    const protectedPageTypes = pages._getProtectedPageTypes(this.structure.pages);
 
     const invalidPageIds = pages.getInvalidPageIds(this.structure.pages, this.content.pages);
     this._removePages(invalidPageIds);
 
-    const filteredPagesArray = Object.entries(this.content.pages) || [];
-
-    // create protected pages
-    protectedPageTypes.forEach(type => {
-      const hasType = !!filteredPagesArray.find(([id, page]) => type === page._type);
-      if (!hasType) {
-        newPages.push(pages.createPage(type));
-      }
-    });
-
-    // create minimum amount of pages
-    while (filteredPagesArray.length + newPages.length < minPages) {
-      newPages.push(pages.createPage());
-    }
-
-    // add created pages to content
-    this.content.global._items = this.content.global._items.concat(newPages.map(page => page._id));
-
-    this.content.pages = newPages.reduce((acc, page) => {
-      acc[page._id] = page;
-      return acc;
-    }, this.content.pages);
+    const requiredPages = pages.getRequiredPages(this.structure, this.content.pages);
+    this._addPages(requiredPages);
 
     // remove unprotected pages over maximum amount
     const pagesToRemove = [];

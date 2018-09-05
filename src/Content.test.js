@@ -5,6 +5,42 @@ import _testStructure from './_testData/structure';
 describe('Content', () => {
   let testContent;
 
+  describe('_removePages', () => {
+    beforeEach(() => {
+      testContent = new Content(_testContent, _testStructure);
+    });
+
+    it('should remove the pages with the given ids', () => {
+      testContent._removePages(['abc123']);
+      const result = testContent.getContent();
+
+      expect(result.pages.abc123).toBeUndefined();
+      expect(result.global._items).not.toContain('abc123');
+    });
+  });
+
+  describe('_addPages', () => {
+    beforeEach(() => {
+      testContent = new Content({ global: { _items: [] }}, _testStructure);
+    });
+
+    it('should add the given pages to global', () => {
+      testContent._addPages([{ _id: 'test1' }, { _id: 'test2' }]);
+      const result = testContent.getContent();
+
+      expect(result.global._items.length).toBe(2);
+      expect(result.global._items).toContain('test1', 'test2');
+    });
+
+    it('should add the given pages to pages', () => {
+      testContent._addPages([{ _id: 'test1' }, { _id: 'test2' }]);
+      const result = testContent.getContent();
+
+      expect(result.pages.test1).not.toBeUndefined();
+      expect(result.pages.test2).not.toBeUndefined();
+    });
+  });
+
   describe('initial content', () => {
     beforeEach(() => {
       testContent = new Content({}, _testStructure);

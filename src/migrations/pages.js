@@ -2,10 +2,14 @@ import * as c from '../constants';
 import Logger from '../logger';
 import { getContentId, pluralize } from '../utils';
 
-export const createPage = (_type = c.TYPE_STANDARD) => ({
+export const _createPage = (_type = c.TYPE_STANDARD) => ({
   _id: getContentId(),
   _type,
 });
+
+export const _getProtectedPageTypes = pages => Object.entries(pages)
+  .filter(entry => entry[1].isProtected)
+  .map(entry => entry[0]);
 
 export const getInvalidPageIds = (pagesStructure, pagesContent) => {
   const invalidPageIds = [];
@@ -20,9 +24,25 @@ export const getInvalidPageIds = (pagesStructure, pagesContent) => {
   return invalidPageIds;
 }
 
-export const getProtectedPageTypes = pages => Object.entries(pages)
-  .filter(entry => entry[1].isProtected)
-  .map(entry => entry[0]);
+export const getRequiredPages = (structure, pagesContent) => {
+  const newPages = [];
+  const protectedPageTypes = _getProtectedPageTypes(structure.pages);
+  const minAmountOfPages = structure.global.minItems;
+  const existingPagesArray = Object.entries(pagesContent);
+
+  protectedPageTypes.forEach(type => {
+    const hasType = !!existingPagesArray.find(([id, page]) => type === page._type);
+    if (!hasType) {
+      newPages.push(_createPage(type));
+    }
+  });
+
+  while (existingPagesArray.length + newPages.length < minAmountOfPages) {
+    newPages.push(_createPage());
+  }
+
+  return newPages;
+}
 
 const logger = new Logger();
 
