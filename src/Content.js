@@ -1,9 +1,13 @@
+import _cloneDeep from 'lodash.clonedeep';
 import * as c from './constants';
 import * as pages from './migrations/pages';
 import * as sections from './migrations/sections';
 
 export default class Content {
-  constructor(content, structure) {
+  constructor(_content, _structure) {
+    const content = _cloneDeep(_content);
+    const structure = _cloneDeep(_structure);
+    
     content.global = content.global || {};
     content.pages = content.pages || {};
     content.sections = content.sections || {};
@@ -58,6 +62,24 @@ export default class Content {
       acc[section._id] = section;
       return acc;
     }, this.content.sections);
+
+    return this;
+  }
+
+  migrateFields() {
+    // add fields to initial content
+    this.structure.global.fields.forEach(fieldName => this.content.global[fieldName] = '');
+
+    Object.entries(this.content.pages).forEach(([id, page]) => {
+      const fieldNames = this.structure.pages[page._type].fields;
+      fieldNames.forEach(fieldName => page[fieldName] = '');
+    });
+
+    Object.entries(this.content.sections).forEach(([id, section]) => {
+      const fieldNames = this.structure.sections[section._type].fields;
+      // TODO: recursive function for field lists
+      fieldNames.forEach(fieldName => section[fieldName] = '');
+    });
 
     return this;
   }
