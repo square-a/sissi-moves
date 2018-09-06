@@ -71,4 +71,14 @@ describe('migrations/sections', () => {
       expect(result.length).toBe(4);
     });
   });
+
+  describe('getSectionsOverMaximum', () => {
+    it('should return an array with section ids for each section exceeding the maximum amount', () => {
+      testStructure.pages.standard.maxItems = 1;
+
+      const result = migrations.getSectionsOverMaximum(testStructure.pages, testContent.pages.abc123);
+
+      expect(result.length).toBe(1);
+    });
+  });
 });

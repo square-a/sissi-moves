@@ -40,6 +40,18 @@ export const getRequiredSectionsForPage = (pagesStructure, page) => {
   return requiredSections;
 }
 
+export const getSectionsOverMaximum = (pagesStructure, page) => {
+  const sectionsOverMaximum = [];
+  const maxSections = pagesStructure[page._type].maxItems;
+  const existingSections = [...page._items];
+
+  while(existingSections.length > maxSections) {
+    sectionsOverMaximum.push(existingSections.pop());
+  }
+
+  return sectionsOverMaximum;
+}
+
 const logger = new Logger();
 
 export function addSections(content, minSections, structure) {

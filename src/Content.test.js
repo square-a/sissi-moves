@@ -284,16 +284,16 @@ describe('Content', () => {
     });
 
     describe('migrateSections', () => {
+      beforeEach(() => {
+        testContent = new Content(_testContent, _testStructure);
+      });
+
       it('should filter out all sections with invalid section types', () => {
         testContent.structure.sections = {
           standard: {
-            maxItems: 6,
-            minItems: 1,
             fields: ['title', 'path'],
           },
           newSectionType: {
-            maxItems: 10,
-            minItems: 4,
             fields: ['image', 'path'],
           },
         };
@@ -303,6 +303,17 @@ describe('Content', () => {
 
         expect(pagesArray.find(page => page._items.includes('123abc'))).toBeUndefined();
         expect(sections['123abc']).toBeUndefined();
+      });
+
+      it('should remove sections exceeding the maximum amount for each page', () => {
+        testContent.structure.pages.standard.maxItems = 0;
+        testContent.structure.pages.standard.minItems = 0;
+        testContent.structure.pages.standard.allowedItems = ['standard', 'photo'];
+
+        const { sections } = testContent.migrateSections().getContent();
+
+        expect(sections['123abc']).toBeUndefined();
+        expect(sections['345def']).toBeUndefined();
       });
     });
   });

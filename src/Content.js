@@ -84,6 +84,9 @@ export default class Content {
     Object.values(this.content.pages).forEach(page => {
       const requiredSections = sections.getRequiredSectionsForPage(this.structure.pages, page);
       this._addSections(requiredSections, page);
+
+      const sectionsOverMaximum = sections.getSectionsOverMaximum(this.structure.pages, page);
+      this._removeSections(sectionsOverMaximum);
     });
 
     return this;
