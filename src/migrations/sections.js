@@ -1,5 +1,3 @@
-import _cloneDeep from 'lodash.clonedeep';
-
 import * as c from '../constants';
 import { getContentId } from '../utils';
 

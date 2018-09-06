@@ -93,8 +93,11 @@ export default class Content {
   }
 
   migrateFields() {
-    // add fields to initial content
-    this.structure.global.fields.forEach(fieldName => this.content.global[fieldName] = '');
+    const requiredGlobalFields = this.structure.global.fields;
+    const missingGlobalFields = requiredGlobalFields
+      .filter(field => !this.content.global.hasOwnProperty(field));
+
+    missingGlobalFields.forEach(field => this.content.global[field] = '');
 
     Object.entries(this.content.pages).forEach(([id, page]) => {
       const fieldNames = this.structure.pages[page._type].fields;

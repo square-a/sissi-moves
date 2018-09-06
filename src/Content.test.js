@@ -316,5 +316,64 @@ describe('Content', () => {
         expect(sections['345def']).toBeUndefined();
       });
     });
+
+    describe('migrateFields', () => {
+      describe('global', () => {
+        it('should add missing fields to global', () => {
+          testContent.structure.global.fields = ['title', 'image', 'path'];
+          const { global } = testContent.migrateFields().getContent();
+
+          expect(global).toHaveProperty('path', '');
+        });
+
+        it('should not overwrite existing global fields', () => {
+          const { global } = testContent.migrateFields().getContent();
+
+          expect(global).toHaveProperty('title', 'Test Project Title');
+        });
+      });
+
+
+      it('should add fields to pages', () => {
+        testContent.content.pages = {
+          test1: {
+            _id: 'test1',
+            _items: [],
+            _type: 'gallery',
+          },
+          test2: {
+            _id: 'test2',
+            _items: [],
+            _type: 'standard',
+          },
+        };
+
+        const { pages } = testContent.migrateFields().getContent();
+
+        expect(pages.test1).toHaveProperty('title', '');
+        expect(pages.test1).toHaveProperty('path', '');
+        expect(pages.test2).toHaveProperty('title', '');
+        expect(pages.test2).toHaveProperty('path', '');
+      });
+
+      it('should add fields to sections', () => {
+        testContent.content.sections = {
+          testA: {
+            _id: 'testA',
+            _type: 'photo',
+          },
+          testB: {
+            _id: 'testB',
+            _type: 'standard',
+          },
+        };
+
+        const { sections } = testContent.migrateFields().getContent();
+
+        expect(sections.testA).toHaveProperty('image', '');
+        expect(sections.testB).toHaveProperty('title', '');
+        expect(sections.testB).toHaveProperty('image', '');
+      });
+    });
   });
 });
