@@ -319,14 +319,28 @@ describe('Content', () => {
 
     describe('migrateFields', () => {
       describe('global', () => {
-        it('should add missing fields to global', () => {
+        it('should remove generally invalid fields', () => {
+          testContent.structure.fields = { image: {} };
+          const { global } = testContent.migrateFields().getContent();
+
+          expect(global).not.toHaveProperty('title');
+        });
+
+        it('should remove fields invalid for global', () => {
+          testContent.structure.global.fields = ['image'];
+          const { global } = testContent.migrateFields().getContent();
+
+          expect(global).not.toHaveProperty('title');
+        });
+
+        it('should add missing fields', () => {
           testContent.structure.global.fields = ['title', 'image', 'path'];
           const { global } = testContent.migrateFields().getContent();
 
           expect(global).toHaveProperty('path', '');
         });
 
-        it('should not overwrite existing global fields', () => {
+        it('should not overwrite existing fields', () => {
           const { global } = testContent.migrateFields().getContent();
 
           expect(global).toHaveProperty('title', 'Test Project Title');

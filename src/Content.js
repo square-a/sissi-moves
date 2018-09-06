@@ -93,8 +93,16 @@ export default class Content {
   }
 
   migrateFields() {
-    const requiredGlobalFields = this.structure.global.fields;
-    const missingGlobalFields = requiredGlobalFields
+    const validFields = Object.keys(this.structure.fields);
+    const validGlobalFields = validFields.filter(field => this.structure.global.fields.includes(field));
+
+    const invalidGlobalFields = Object.keys(this.content.global).filter(prop => {
+      return !(prop.substring(0, 1) === '_' || validGlobalFields.includes(prop));
+    });
+
+    invalidGlobalFields.forEach(field => delete this.content.global[field]);
+
+    const missingGlobalFields = validGlobalFields
       .filter(field => !this.content.global.hasOwnProperty(field));
 
     missingGlobalFields.forEach(field => this.content.global[field] = '');
