@@ -242,5 +242,28 @@ describe('Content', () => {
         expect(Object.entries(pages)[0][0]).toBe('def345');
       });
     });
+
+    describe('migrateSections', () => {
+      it('should filter out all sections with invalid section types', () => {
+        testContent.structure.sections = {
+          standard: {
+            maxItems: 6,
+            minItems: 1,
+            fields: ['title', 'path'],
+          },
+          newSectionType: {
+            maxItems: 10,
+            minItems: 4,
+            fields: ['image', 'path'],
+          },
+        };
+
+        const { pages, sections } = testContent.migrateSections().getContent();
+        const pagesArray = Object.values(pages);
+
+        expect(pagesArray.find(page => page._items.includes('123abc'))).toBeUndefined();
+        expect(sections['123abc']).toBeUndefined();
+      });
+    });
   });
 });

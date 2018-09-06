@@ -10,6 +10,7 @@ export const _getProtectedPageTypes = pages => Object.entries(pages)
   .filter(entry => entry[1].isProtected)
   .map(entry => entry[0]);
 
+
 export const getInvalidPageIds = (pagesStructure, pagesContent) => {
   const invalidPageIds = [];
   const validPageTypes = Object.keys(pagesStructure);
@@ -18,7 +19,7 @@ export const getInvalidPageIds = (pagesStructure, pagesContent) => {
     if (!validPageTypes.includes(page._type)) {
       invalidPageIds.push(id);
     }
-  })
+  });
 
   return invalidPageIds;
 }
@@ -27,17 +28,18 @@ export const getPagesOverMaximum = (structure, pagesContent) => {
   const pagesOverMaximum = [];
   const protectedPageTypes = _getProtectedPageTypes(structure.pages);
   const maxAmountOfPages = structure.global.maxItems;
-  const existingPagesArray = Object.entries(pagesContent);
+  const existingPagesArray = Object.values(pagesContent).reverse();
 
   while (existingPagesArray.length > maxAmountOfPages) {
-    let pageToBeRemoved = existingPagesArray.pop();
+    const pageIndex = existingPagesArray
+      .findIndex(({ _type }) => !protectedPageTypes.includes(_type));
 
-    while (pageToBeRemoved && protectedPageTypes.includes(pageToBeRemoved[1]._type)) {
-      pageToBeRemoved = existingPagesArray.pop();
-    }
+    if (pageIndex !== -1) {
+      const [removedPage] = existingPagesArray.splice(pageIndex, 1);
+      pagesOverMaximum.push(removedPage._id);
 
-    if (pageToBeRemoved) {
-      pagesOverMaximum.push(pageToBeRemoved[0]);
+    } else {
+      break;
     }
   }
 

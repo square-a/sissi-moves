@@ -32,11 +32,24 @@ export default class Content {
 
   _removePages(pageIdsToRemove) {
     pageIdsToRemove.forEach(id => {
-      const pageIds = this.content.global._items;
-      const pageIndex = pageIds.findIndex(pageId => pageId === id);
-      pageIds.splice(pageIndex, 1);
+      const existingPageIds = this.content.global._items;
+      const pageIndex = existingPageIds.findIndex(pageId => pageId === id);
+      existingPageIds.splice(pageIndex, 1);
 
       delete this.content.pages[id];
+    });
+  }
+
+  _removeSections(sectionIdsToRemove) {
+    sectionIdsToRemove.forEach(id => {
+      const pages = Object.values(this.content.pages);
+      pages.forEach(page => {
+        const existingSectionIds = page._items;
+        const sectionIndex = existingSectionIds.findIndex(sectionId => sectionId === id);
+        existingSectionIds.splice(sectionIndex, 1);
+      });
+
+      delete this.content.sections[id];
     });
   }
 
@@ -56,6 +69,9 @@ export default class Content {
   }
 
   migrateSections() {
+    const invalidSectionIds = sections.getInvalidSectionIds(this.structure.sections, this.content.sections);
+    this._removeSections(invalidSectionIds);
+
     // add sections to initial content
     const newSections = [];
 

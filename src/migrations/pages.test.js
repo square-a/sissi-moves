@@ -1,15 +1,15 @@
 import _cloneDeep from 'lodash.clonedeep';
 
-import _testStructure from '../_testData/structure';
 import _testContent from '../_testData/content';
+import _testStructure from '../_testData/structure';
 import * as migrations from './pages';
 
 describe('migrations/pages', () => {
   let testContent, testStructure;
 
   beforeEach(() => {
-    testStructure = _cloneDeep(_testStructure);
     testContent = _cloneDeep(_testContent);
+    testStructure = _cloneDeep(_testStructure);
   });
 
   describe('_createPage', () => {
@@ -59,12 +59,14 @@ describe('migrations/pages', () => {
       expect(result.length).toBe(1);
     });
 
-    it('should never include protected pages', () => {
+    it('should not include protected pages', () => {
+      testStructure.global.maxItems = 1;
       testStructure.pages.standard.isProtected = true;
 
       const result = migrations.getPagesOverMaximum(testStructure, testContent.pages);
 
-      expect(result).not.toContain('abc123', 'def345');
+      expect(result).not.toContain('abc123');
+      expect(result).not.toContain('def345');
     });
   });
 

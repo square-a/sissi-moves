@@ -10,6 +10,20 @@ export const createSection = (type) => ({
   _type: type || c.TYPE_STANDARD,
 });
 
+// TODO: combine with getInvalidPageIds --> DRY
+export const getInvalidSectionIds = (sectionsStructure, sectionsContent) => {
+  const invalidSectionIds = [];
+  const validSectionTypes = Object.keys(sectionsStructure);
+
+  Object.entries(sectionsContent).forEach(([id, section]) => {
+    if (!validSectionTypes.includes(section._type)) {
+      invalidSectionIds.push(id);
+    }
+  });
+
+  return invalidSectionIds;
+}
+
 const logger = new Logger();
 
 export function addSections(content, minSections, structure) {
