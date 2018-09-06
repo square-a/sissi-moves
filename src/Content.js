@@ -94,24 +94,30 @@ export default class Content {
 
   migrateFields() {
     const validFields = Object.keys(this.structure.fields);
-    const validGlobalFields = validFields.filter(field => this.structure.global.fields.includes(field));
 
+    // remove invalid global fields
+    const validGlobalFields = validFields.filter(field => this.structure.global.fields.includes(field));
     const invalidGlobalFields = Object.keys(this.content.global).filter(prop => {
       return !(prop.substring(0, 1) === '_' || validGlobalFields.includes(prop));
     });
 
     invalidGlobalFields.forEach(field => delete this.content.global[field]);
 
+    // add missing global fields
     const missingGlobalFields = validGlobalFields
       .filter(field => !this.content.global.hasOwnProperty(field));
 
     missingGlobalFields.forEach(field => this.content.global[field] = '');
 
-    Object.entries(this.content.pages).forEach(([id, page]) => {
-      const fieldNames = this.structure.pages[page._type].fields;
-      fieldNames.forEach(fieldName => page[fieldName] = '');
+    // PAGES
+    Object.values(this.content.pages).forEach(page => {
+      // add missing
+      const requiredFields = this.structure.pages[page._type].fields;
+      const missingPageFields = requiredFields.filter(field => !page.hasOwnProperty(field));
+      missingPageFields.forEach(field => page[field] = '');
     });
 
+    // SECTIONS
     Object.entries(this.content.sections).forEach(([id, section]) => {
       const fieldNames = this.structure.sections[section._type].fields;
       // TODO: recursive function for field lists

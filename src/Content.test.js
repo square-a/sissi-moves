@@ -347,28 +347,22 @@ describe('Content', () => {
         });
       });
 
+      describe('pages', () => {
+        it('should add missing fields', () => {
+          testContent.structure.pages.standard.fields = ['title', 'path', 'image'];
 
-      it('should add fields to pages', () => {
-        testContent.content.pages = {
-          test1: {
-            _id: 'test1',
-            _items: [],
-            _type: 'gallery',
-          },
-          test2: {
-            _id: 'test2',
-            _items: [],
-            _type: 'standard',
-          },
-        };
+          const { pages } = testContent.migrateFields().getContent();
 
-        const { pages } = testContent.migrateFields().getContent();
+          expect(pages.abc123).toHaveProperty('image', '');
+        });
 
-        expect(pages.test1).toHaveProperty('title', '');
-        expect(pages.test1).toHaveProperty('path', '');
-        expect(pages.test2).toHaveProperty('title', '');
-        expect(pages.test2).toHaveProperty('path', '');
+        it('should not overwrite exising fields', () => {
+          const { pages } = testContent.migrateFields().getContent();
+
+          expect(pages.abc123).toHaveProperty('title', 'Welcome');
+        });
       });
+
 
       it('should add fields to sections', () => {
         testContent.content.sections = {
