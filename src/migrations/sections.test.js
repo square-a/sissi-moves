@@ -33,7 +33,7 @@ describe('migrations/sections', () => {
       testStructure.sections = { standard: {}, newSection: {} };
       const result = migrations.getInvalidSectionIds(testStructure, testContent);
 
-      expect(result).toContain('123abc');
+      expect(result).toEqual(['123abc', '567ghi']);
     });
 
     it('should include invalid section types for each page type', () => {
