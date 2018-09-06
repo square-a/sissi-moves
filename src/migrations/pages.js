@@ -3,6 +3,7 @@ import { getContentId } from '../utils';
 
 export const _createPage = (_type = c.TYPE_STANDARD) => ({
   _id: getContentId(),
+  _items: [],
   _type,
 });
 

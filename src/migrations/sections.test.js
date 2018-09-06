@@ -30,13 +30,22 @@ describe('migrations/sections', () => {
 
   describe('getInvalidSectionIds', () => {
     it('should return an array of sections with invalid section types', () => {
-      const result = migrations.getInvalidSectionIds({ standard: {}, newSection: {} }, testContent.sections);
+      testStructure.sections = { standard: {}, newSection: {} };
+      const result = migrations.getInvalidSectionIds(testStructure, testContent);
+
+      expect(result).toContain('123abc');
+    });
+
+    it('should include invalid section types for each page type', () => {
+      const result = migrations.getInvalidSectionIds(testStructure, testContent);
 
       expect(result).toEqual(['123abc']);
     });
 
     it('should return an empty array if all existing sections have valid types', () => {
-      const result = migrations.getInvalidSectionIds(testStructure.sections, testContent.sections);
+      testStructure.pages.standard = { allowedItems: ['standard', 'photo'] };
+
+      const result = migrations.getInvalidSectionIds(testStructure, testContent);
 
       expect(result).toEqual([]);
     });

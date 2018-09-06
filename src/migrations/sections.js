@@ -11,14 +11,24 @@ export const createSection = (type) => ({
 });
 
 // TODO: combine with getInvalidPageIds --> DRY
-export const getInvalidSectionIds = (sectionsStructure, sectionsContent) => {
+export const getInvalidSectionIds = (structure, content) => {
   const invalidSectionIds = [];
-  const validSectionTypes = Object.keys(sectionsStructure);
+  const validSectionTypes = Object.keys(structure.sections);
 
-  Object.entries(sectionsContent).forEach(([id, section]) => {
+  Object.entries(content.sections).forEach(([id, section]) => {
     if (!validSectionTypes.includes(section._type)) {
       invalidSectionIds.push(id);
     }
+  });
+
+  Object.values(content.pages).forEach(page => {
+    const validSectionTypesForPage = structure.pages[page._type].allowedItems || [c.TYPE_STANDARD];
+    page._items.forEach(sectionId => {
+      const sectionType = content.sections[sectionId]._type;
+      if (!validSectionTypesForPage.includes(sectionType)) {
+        invalidSectionIds.push(sectionId);
+      }
+    });
   });
 
   return invalidSectionIds;

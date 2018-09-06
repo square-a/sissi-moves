@@ -69,7 +69,7 @@ export default class Content {
   }
 
   migrateSections() {
-    const invalidSectionIds = sections.getInvalidSectionIds(this.structure.sections, this.content.sections);
+    const invalidSectionIds = sections.getInvalidSectionIds(this.structure, this.content);
     this._removeSections(invalidSectionIds);
 
     // add sections to initial content

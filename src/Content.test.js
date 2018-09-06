@@ -78,10 +78,12 @@ describe('Content', () => {
         testContent.content.pages = {
           test1: {
             _id: 'test1',
+            _items: [],
             _type: 'gallery',
           },
           test2: {
             _id: 'test2',
+            _items: [],
             _type: 'standard',
           },
         };

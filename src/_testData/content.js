@@ -14,7 +14,7 @@ export default {
     },
     'def345': {
       _id: 'def345',
-      _items: ['123abc'],
+      _items: ['567ghi'],
       _type: 'gallery',
       path: 'photos',
       title: 'My Album',
@@ -30,6 +30,11 @@ export default {
       _id: '345def',
       _type: 'standard',
       title: 'This is awesome',
+    },
+    '567ghi': {
+      _id: '567ghi',
+      _type: 'photo',
+      image: 'bfbfbfb.png',
     },
   },
 };
