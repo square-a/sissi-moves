@@ -30,6 +30,17 @@ export default class Content {
     }, this.content.pages);
   }
 
+  _addSections(newSections, page) {
+    newSections.forEach(section => {
+      page._items.push(section._id);
+
+      this.content.sections = newSections.reduce((acc, section) => {
+        acc[section._id] = section;
+        return acc;
+      }, this.content.sections);
+    });
+  }
+
   _removePages(pageIdsToRemove) {
     pageIdsToRemove.forEach(id => {
       const existingPageIds = this.content.global._items;
@@ -44,9 +55,7 @@ export default class Content {
     sectionIdsToRemove.forEach(id => {
       const pages = Object.values(this.content.pages);
       pages.forEach(page => {
-        const existingSectionIds = page._items;
-        const sectionIndex = existingSectionIds.findIndex(sectionId => sectionId === id);
-        existingSectionIds.splice(sectionIndex, 1);
+        page._items = page._items.filter(sectionId => sectionId === id)
       });
 
       delete this.content.sections[id];
@@ -72,26 +81,10 @@ export default class Content {
     const invalidSectionIds = sections.getInvalidSectionIds(this.structure, this.content);
     this._removeSections(invalidSectionIds);
 
-    // add sections to initial content
-    const newSections = [];
-
-    Object.entries(this.content.pages).forEach(([id, page]) => {
-      const pageStructure = this.structure.pages[page._type];
-      const allowedSectionTypes = pageStructure.allowedItems || [c.TYPE_STANDARD];
-      const minSections = pageStructure.minItems || 0;
-      page._items = [];
-
-      while(page._items.length < minSections) {
-        const newSection = sections.createSection(allowedSectionTypes[0]);
-        newSections.push(newSection);
-        page._items.push(newSection._id);
-      }
+    Object.values(this.content.pages).forEach(page => {
+      const requiredSections = sections.getRequiredSectionsForPage(this.structure.pages, page);
+      this._addSections(requiredSections, page);
     });
-
-    this.content.sections = newSections.reduce((acc, section) => {
-      acc[section._id] = section;
-      return acc;
-    }, this.content.sections);
 
     return this;
   }

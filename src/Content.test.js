@@ -15,7 +15,8 @@ describe('Content', () => {
       const result = testContent.getContent();
 
       expect(result.global._items.length).toBe(2);
-      expect(result.global._items).toContain('test1', 'test2');
+      expect(result.global._items).toContain('test1');
+      expect(result.global._items).toContain('test2');
     });
 
     it('should add the given pages to pages', () => {
@@ -24,6 +25,41 @@ describe('Content', () => {
 
       expect(result.pages.test1).not.toBeUndefined();
       expect(result.pages.test2).not.toBeUndefined();
+    });
+  });
+
+  describe('_addSections', () => {
+    beforeEach(() => {
+      const pagesContent = {
+        test1: {
+          _id: 'test1',
+          _items: [],
+          _type: 'gallery',
+        },
+        test2: {
+          _id: 'test2',
+          _items: [],
+          _type: 'standard',
+        },
+      };
+      testContent = new Content({ pages: pagesContent }, _testStructure);
+    });
+
+    it('should add the given sections to the given page', () => {
+      testContent._addSections([{ _id: 'test1' }, { _id: 'test2' }], testContent.content.pages.test2);
+      const result = testContent.getContent();
+
+      expect(result.pages.test2._items.length).toBe(2);
+      expect(result.pages.test2._items).toContain('test1');
+      expect(result.pages.test2._items).toContain('test2');
+    });
+
+    it('should add the given sections to sections', () => {
+      testContent._addSections([{ _id: 'test1' }, { _id: 'test2' }], testContent.content.pages.test1);
+      const result = testContent.getContent();
+
+      expect(result.sections.test1).not.toBeUndefined();
+      expect(result.sections.test2).not.toBeUndefined();
     });
   });
 
@@ -145,10 +181,12 @@ describe('Content', () => {
         testContent.content.pages = {
           test1: {
             _id: 'test1',
+            _items: [],
             _type: 'gallery',
           },
           test2: {
             _id: 'test2',
+            _items: [],
             _type: 'standard',
           },
         };

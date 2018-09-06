@@ -5,7 +5,7 @@ import * as c from '../constants';
 import Logger from '../logger';
 import { getContentId, pluralize } from '../utils';
 
-export const createSection = (type) => ({
+export const _createSection = (type) => ({
   _id: getContentId(),
   _type: type || c.TYPE_STANDARD,
 });
@@ -25,6 +25,19 @@ export const getInvalidSectionIds = (structure, content) => {
   });
 
   return invalidSectionIds;
+}
+
+export const getRequiredSectionsForPage = (pagesStructure, page) => {
+  const requiredSections = [];
+  const allowedSectionTypes = pagesStructure[page._type].allowedItems || [c.TYPE_STANDARD];
+  const minSections = pagesStructure[page._type].minItems || 0;
+
+  while(page._items.length + requiredSections.length < minSections) {
+    const newSection = _createSection(allowedSectionTypes[0]);
+    requiredSections.push(newSection);
+  }
+
+  return requiredSections;
 }
 
 const logger = new Logger();

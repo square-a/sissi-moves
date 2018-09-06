@@ -12,16 +12,16 @@ describe('migrations/sections', () => {
     testStructure = _cloneDeep(_testStructure);
   });
 
-  describe('createSection', () => {
+  describe('_createSection', () => {
     it('should return a section with the desired type', () => {
-      const result = migrations.createSection('photo');
+      const result = migrations._createSection('photo');
 
       expect(result).toHaveProperty('_id');
       expect(result).toHaveProperty('_type', 'photo');
     });
 
     it('should return a section with the standard type if no type is specified', () => {
-      const result = migrations.createSection();
+      const result = migrations._createSection();
 
       expect(result).toHaveProperty('_id');
       expect(result).toHaveProperty('_type', 'standard');
@@ -48,6 +48,27 @@ describe('migrations/sections', () => {
       const result = migrations.getInvalidSectionIds(testStructure, testContent);
 
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('getRequiredSectionsForPage', () => {
+    it('should return an array with the minimum amount of sections for the given page', () => {
+      testContent.pages = {
+        test1: {
+          _id: 'test1',
+          _items: [],
+          _type: 'gallery',
+        },
+        test2: {
+          _id: 'test2',
+          _items: [],
+          _type: 'standard',
+        },
+      };
+
+      const result = migrations.getRequiredSectionsForPage(testStructure.pages, testContent.pages.test1);
+
+      expect(result.length).toBe(4);
     });
   });
 });
