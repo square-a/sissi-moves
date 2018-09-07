@@ -409,6 +409,33 @@ describe('Content', () => {
           expect(sections['345def']).toHaveProperty('title', 'This is awesome');
         });
       });
+
+      describe('field lists', () => {
+        it('should remove generally invalid fields', () => {
+          delete testContent.structure.fields.title;
+          const { pages } = testContent.migrateFields().getContent();
+
+          expect(pages.def345.gallery[0]).not.toHaveProperty('title');
+          expect(pages.def345.gallery[1]).not.toHaveProperty('title');
+        });
+
+        it('should remove invalid fields for the given field list', () => {
+          testContent.structure.fields.gallery.fields = ['image'];
+          const { pages } = testContent.migrateFields().getContent();
+
+          expect(pages.def345.gallery[0]).not.toHaveProperty('title');
+          expect(pages.def345.gallery[1]).not.toHaveProperty('title');
+        });
+
+        it('should add missing fields', () => {
+          testContent.structure.fields.gallery.fields = ['image', 'title', 'path'];
+
+          const { pages } = testContent.migrateFields().getContent();
+
+          expect(pages.def345.gallery[0]).toHaveProperty('path', '');
+          expect(pages.def345.gallery[1]).toHaveProperty('path', '');
+        });
+      });
     });
   });
 });

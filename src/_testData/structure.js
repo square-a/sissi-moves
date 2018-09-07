@@ -14,6 +14,14 @@ export default {
       label: 'Image',
       type: 'image',
     },
+    gallery: {
+      label: 'Gallery',
+      type: 'list',
+      itemLabel: 'Photo',
+      maxItems: 10,
+      minItems: 2,
+      fields: ['title', 'image'],
+    },
   },
   global: {
     maxItems: 5,
@@ -30,7 +38,7 @@ export default {
       maxItems: 10,
       minItems: 4,
       allowedItems: ['photo', 'standard'],
-      fields: ['title', 'path'],
+      fields: ['title', 'path', 'gallery'],
       isProtected: true,
     },
   },

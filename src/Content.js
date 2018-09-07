@@ -41,6 +41,12 @@ export default class Content {
     });
   }
 
+  _addMissingFields(validFields, itemStructure, itemContent) {
+    const validItemFields = validFields.filter(field => itemStructure.fields.includes(field));
+    const missingItemFields = validItemFields.filter(field => !itemContent.hasOwnProperty(field));
+    missingItemFields.forEach(field => itemContent[field] = '');
+  }
+
   _removePages(pageIdsToRemove) {
     pageIdsToRemove.forEach(id => {
       const existingPageIds = this.content.global._items;
@@ -59,6 +65,25 @@ export default class Content {
       });
 
       delete this.content.sections[id];
+    });
+  }
+
+  _removeInvalidFields(validFields, itemStructure, itemContent) {
+    const itemFields = Object.keys(itemContent)
+      .filter(prop => !prop.startsWith('_'));
+
+    itemFields.forEach(fieldName => {
+      const validItemFields = validFields.filter(field => itemStructure.fields.includes(field));
+
+      if (validItemFields.includes(fieldName)) {
+        if (this.structure.fields[fieldName].type === 'list') {
+          itemContent[fieldName].forEach(listContent => {
+            this._removeInvalidFields(validFields, this.structure.fields[fieldName], listContent);
+          });
+        }
+      } else {
+        delete itemContent[fieldName];
+      }
     });
   }
 
@@ -95,50 +120,22 @@ export default class Content {
   migrateFields() {
     const validFields = Object.keys(this.structure.fields);
 
-    // remove invalid global fields
-    const validGlobalFields = validFields.filter(field => this.structure.global.fields.includes(field));
-    const invalidGlobalFields = Object.keys(this.content.global)
-    .filter(prop => !(prop.substring(0, 1) === '_' || validGlobalFields.includes(prop)));
+    this._removeInvalidFields(validFields, this.structure.global, this.content.global);
+    this._addMissingFields(validFields, this.structure.global, this.content.global);
 
-    invalidGlobalFields.forEach(field => delete this.content.global[field]);
-
-    // add missing global fields
-    const missingGlobalFields = validGlobalFields
-      .filter(field => !this.content.global.hasOwnProperty(field));
-    missingGlobalFields.forEach(field => this.content.global[field] = '');
-
-    // PAGES
     Object.values(this.content.pages).forEach(page => {
-      // remove invalid
-      const validPageFields = validFields
-        .filter(field => this.structure.pages[page._type].fields.includes(field));
-
-      const invalidPageFields = Object.keys(page)
-        .filter(prop => !(prop.substring(0, 1) === '_' || validPageFields.includes(prop)));
-
-      invalidPageFields.forEach(field => delete this.content.pages[page._id][field]);
-
-      // add missing
-      const missingPageFields = validPageFields.filter(field => !page.hasOwnProperty(field));
-      missingPageFields.forEach(field => page[field] = '');
+      const pageStructure = this.structure.pages[page._type];
+      const pageContent = this.content.pages[page._id];
+      this._removeInvalidFields(validFields, pageStructure, pageContent);
+      this._addMissingFields(validFields, pageStructure, pageContent);
     });
 
-    // SECTIONS
     Object.values(this.content.sections).forEach(section => {
-      // remove invalid
-      const validSectionFields = validFields
-        .filter(field => this.structure.sections[section._type].fields.includes(field));
-
-      const invalidSectionFields = Object.keys(section)
-        .filter(prop => !(prop.substring(0, 1) === '_' || validSectionFields.includes(prop)));
-
-      invalidSectionFields.forEach(field => delete this.content.sections[section._id][field]);
-
-      // add missing
-      const missingSectionFields = validSectionFields.filter(field => !section.hasOwnProperty(field));
-      missingSectionFields.forEach(field => section[field] = '');
+      const sectionStructure = this.structure.sections[section._type];
+      const sectionContent = this.content.sections[section._id];
+      this._removeInvalidFields(validFields, sectionStructure, sectionContent);
+      this._addMissingFields(validFields, sectionStructure, sectionContent);
     });
-    // TODO: recursive function for field lists
 
     return this;
   }

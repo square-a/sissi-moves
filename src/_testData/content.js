@@ -18,6 +18,16 @@ export default {
       _type: 'gallery',
       path: 'photos',
       title: 'My Album',
+      gallery: [
+        {
+          title: 'Photo No 1',
+          image: 'example1.jpeg',
+        },
+        {
+          title: 'Photo No 2',
+          image: 'example2.jpeg',
+        },
+      ],
     },
   },
   sections: {
