@@ -1,10 +1,7 @@
-import { prompt } from 'inquirer';
 import fs from 'fs';
 import path from 'path';
 
 import Content from './Content';
-import * as c from './constants';
-import * as m from './migrations';
 import { readJSON } from './utils';
 
 export default async function migrate() {

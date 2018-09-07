@@ -4,17 +4,15 @@ import * as pages from './migrations/pages';
 import * as sections from './migrations/sections';
 
 export default class Content {
-  constructor(_content, _structure) {
-    const content = _cloneDeep(_content);
-    const structure = _cloneDeep(_structure);
-
-    content.global = content.global || {};
-    content.pages = content.pages || {};
-    content.sections = content.sections || {};
-
-    this.content = content;
+  constructor(content, structure) {
+    this.content = {
+      global: {},
+      pages: {},
+      sections: {},
+      ..._cloneDeep(content),
+    };
     // TODO: validate structure (add default values for e.g. minItems = 0; maxItems = 99;)
-    this.structure = structure;
+    this.structure = _cloneDeep(structure);
   }
 
   getContent() {
