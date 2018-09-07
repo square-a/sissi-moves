@@ -2,13 +2,10 @@ import { prompt } from 'inquirer';
 import fs from 'fs';
 import path from 'path';
 
-import * as c from './constants';
 import Content from './Content';
-import Logger from './logger';
+import * as c from './constants';
 import * as m from './migrations';
 import { readJSON } from './utils';
-
-const logger = new Logger();
 
 export default async function migrate() {
   const contentPath = path.join(process.cwd(), 'content.json');
@@ -28,7 +25,8 @@ export default async function migrate() {
 
   const newContent = new Content(content, structure);
 
-  newContent.migratePages()
+  newContent
+    .migratePages()
     .migrateSections()
     .migrateFields();
 
@@ -44,6 +42,6 @@ export default async function migrate() {
     }
 
     fs.writeFileSync(contentPath, JSON.stringify(newContent.getContent(), null, 2));
-    logger.log({ item: message });
+    console.log(message);
   }
 }

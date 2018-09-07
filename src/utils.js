@@ -36,11 +36,3 @@ export function readJSON(path, createIfNotExists) {
 export function getContentId() {
   return Math.random().toString(36).substring(2, 9);
 }
-
-export function pluralize(str, amount) {
-  if (typeof amount !== 'number') {
-    amount = amount.length;
-  }
-
-  return amount > 1 ? `${str}s` : str;
-}
