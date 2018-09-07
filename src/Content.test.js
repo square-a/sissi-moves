@@ -348,6 +348,22 @@ describe('Content', () => {
       });
 
       describe('pages', () => {
+        it('should remove generally invalid fields', () => {
+          testContent.structure.fields = { image: {} };
+          const { pages } = testContent.migrateFields().getContent();
+
+          expect(pages.abc123).not.toHaveProperty('path');
+          expect(pages.abc123).not.toHaveProperty('title');
+        });
+
+        it('should remove fields invalid for the page', () => {
+          testContent.structure.pages.standard.fields = ['image'];
+          const { pages } = testContent.migrateFields().getContent();
+
+          expect(pages.abc123).not.toHaveProperty('path');
+          expect(pages.abc123).not.toHaveProperty('title');
+        });
+
         it('should add missing fields', () => {
           testContent.structure.pages.standard.fields = ['title', 'path', 'image'];
 

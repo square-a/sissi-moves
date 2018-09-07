@@ -97,9 +97,8 @@ export default class Content {
 
     // remove invalid global fields
     const validGlobalFields = validFields.filter(field => this.structure.global.fields.includes(field));
-    const invalidGlobalFields = Object.keys(this.content.global).filter(prop => {
-      return !(prop.substring(0, 1) === '_' || validGlobalFields.includes(prop));
-    });
+    const invalidGlobalFields = Object.keys(this.content.global)
+    .filter(prop => !(prop.substring(0, 1) === '_' || validGlobalFields.includes(prop)));
 
     invalidGlobalFields.forEach(field => delete this.content.global[field]);
 
@@ -111,9 +110,18 @@ export default class Content {
 
     // PAGES
     Object.values(this.content.pages).forEach(page => {
+      // remove invalid
+      const validPageFields = validFields
+        .filter(field => this.structure.pages[page._type].fields.includes(field));
+
+      const invalidPageFields = Object.keys(page)
+        .filter(prop => !(prop.substring(0, 1) === '_' || validPageFields.includes(prop)));
+
+      invalidPageFields.forEach(field => delete this.content.pages[page._id][field]);
+
       // add missing
-      const requiredFields = this.structure.pages[page._type].fields;
-      const missingPageFields = requiredFields.filter(field => !page.hasOwnProperty(field));
+      const missingPageFields = validPageFields.filter(field => !page.hasOwnProperty(field));
+
       missingPageFields.forEach(field => page[field] = '');
     });
 
