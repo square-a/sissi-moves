@@ -42,8 +42,20 @@ export default class Content {
   }
 
   _addMissingFields(validFields, itemStructure, itemContent) {
+    const itemFields = Object.keys(itemContent)
+      .filter(prop => !prop.startsWith('_'));
+
     const validItemFields = validFields.filter(field => itemStructure.fields.includes(field));
-    const missingItemFields = validItemFields.filter(field => !itemContent.hasOwnProperty(field));
+    const missingItemFields = validItemFields.filter(field => !itemFields.includes(field));
+
+    itemFields.forEach(fieldName => {
+      if (this.structure.fields[fieldName].type === 'list') {
+        itemContent[fieldName].forEach(listContent => {
+          this._addMissingFields(validFields, this.structure.fields[fieldName], listContent);
+        });
+      }
+    });
+
     missingItemFields.forEach(field => itemContent[field] = '');
   }
 
