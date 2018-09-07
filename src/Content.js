@@ -105,7 +105,6 @@ export default class Content {
     // add missing global fields
     const missingGlobalFields = validGlobalFields
       .filter(field => !this.content.global.hasOwnProperty(field));
-
     missingGlobalFields.forEach(field => this.content.global[field] = '');
 
     // PAGES
@@ -121,16 +120,25 @@ export default class Content {
 
       // add missing
       const missingPageFields = validPageFields.filter(field => !page.hasOwnProperty(field));
-
       missingPageFields.forEach(field => page[field] = '');
     });
 
     // SECTIONS
-    Object.entries(this.content.sections).forEach(([id, section]) => {
-      const fieldNames = this.structure.sections[section._type].fields;
-      // TODO: recursive function for field lists
-      fieldNames.forEach(fieldName => section[fieldName] = '');
+    Object.values(this.content.sections).forEach(section => {
+      // remove invalid
+      const validSectionFields = validFields
+        .filter(field => this.structure.sections[section._type].fields.includes(field));
+
+      const invalidSectionFields = Object.keys(section)
+        .filter(prop => !(prop.substring(0, 1) === '_' || validSectionFields.includes(prop)));
+
+      invalidSectionFields.forEach(field => delete this.content.sections[section._id][field]);
+
+      // add missing
+      const missingSectionFields = validSectionFields.filter(field => !section.hasOwnProperty(field));
+      missingSectionFields.forEach(field => section[field] = '');
     });
+    // TODO: recursive function for field lists
 
     return this;
   }

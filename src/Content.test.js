@@ -379,24 +379,35 @@ describe('Content', () => {
         });
       });
 
+      describe('sections', () => {
+        it('should remove generally invalid fields', () => {
+          testContent.structure.fields = { image: {} };
+          const { sections } = testContent.migrateFields().getContent();
 
-      it('should add fields to sections', () => {
-        testContent.content.sections = {
-          testA: {
-            _id: 'testA',
-            _type: 'photo',
-          },
-          testB: {
-            _id: 'testB',
-            _type: 'standard',
-          },
-        };
+          expect(sections['345def']).not.toHaveProperty('title');
+        });
 
-        const { sections } = testContent.migrateFields().getContent();
+        it('should remove fields invalid for the section', () => {
+          testContent.structure.sections.standard.fields = ['image'];
+          const { sections } = testContent.migrateFields().getContent();
 
-        expect(sections.testA).toHaveProperty('image', '');
-        expect(sections.testB).toHaveProperty('title', '');
-        expect(sections.testB).toHaveProperty('image', '');
+          expect(sections['345def']).not.toHaveProperty('title');
+        });
+
+        it('should add missing fields', () => {
+          testContent.structure.sections.standard.fields = ['title', 'path', 'image'];
+
+          const { sections } = testContent.migrateFields().getContent();
+
+          expect(sections['345def']).toHaveProperty('image', '');
+          expect(sections['345def']).toHaveProperty('path', '');
+        });
+
+        it('should not overwrite exising fields', () => {
+          const { sections } = testContent.migrateFields().getContent();
+
+          expect(sections['345def']).toHaveProperty('title', 'This is awesome');
+        });
       });
     });
   });
