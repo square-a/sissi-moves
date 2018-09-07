@@ -8,9 +8,10 @@ export const _createPage = (_type = c.TYPE_STANDARD) => ({
 });
 
 export const _getProtectedPageTypes = pages => Object.entries(pages)
-  .filter(entry => entry[1].isProtected)
-  .map(entry => entry[0]);
-
+  .reduce((acc, [type, page]) => {
+    if (page.isProtected) acc.push(type);
+    return acc;
+  }, []);
 
 export const getInvalidPageIds = (pagesStructure, pagesContent) => {
   const invalidPageIds = [];
@@ -36,8 +37,8 @@ export const getPagesOverMaximum = (structure, pagesContent) => {
       .findIndex(({ _type }) => !protectedPageTypes.includes(_type));
 
     if (pageIndex !== -1) {
-      const [removedPage] = existingPagesArray.splice(pageIndex, 1);
-      pagesOverMaximum.push(removedPage._id);
+      const [pageToRemove] = existingPagesArray.splice(pageIndex, 1);
+      pagesOverMaximum.push(pageToRemove._id);
 
     } else {
       break;
@@ -51,17 +52,19 @@ export const getRequiredPages = (structure, pagesContent) => {
   const requiredPages = [];
   const protectedPageTypes = _getProtectedPageTypes(structure.pages);
   const minAmountOfPages = structure.global.minItems;
-  const existingPagesArray = Object.entries(pagesContent);
+  const existingPagesArray = Object.values(pagesContent);
 
   protectedPageTypes.forEach(type => {
-    const hasType = !!existingPagesArray.find(([id, page]) => type === page._type);
+    const hasType = existingPagesArray.some(page => type === page._type);
     if (!hasType) {
       requiredPages.push(_createPage(type));
     }
   });
 
-  while (existingPagesArray.length + requiredPages.length < minAmountOfPages) {
+  let totalAmountOfPages = existingPagesArray.length + requiredPages.length;
+  while (totalAmountOfPages < minAmountOfPages) {
     requiredPages.push(_createPage());
+    totalAmountOfPages += 1;
   }
 
   return requiredPages;

@@ -19,22 +19,16 @@ export default class Content {
   }
 
   _addPages(newPages) {
-    this.content.global._items = this.content.global._items.concat(newPages.map(page => page._id));
-
-    this.content.pages = newPages.reduce((acc, page) => {
-      acc[page._id] = page;
-      return acc;
-    }, this.content.pages);
+    newPages.forEach(page => {
+      this.content.global._items.push(page._id);
+      this.content.pages[page._id] = page;
+    });
   }
 
   _addSections(newSections, page) {
     newSections.forEach(section => {
       page._items.push(section._id);
-
-      this.content.sections = newSections.reduce((acc, section) => {
-        acc[section._id] = section;
-        return acc;
-      }, this.content.sections);
+      this.content.sections[section._id] = section;
     });
   }
 
@@ -42,8 +36,18 @@ export default class Content {
     const itemFields = Object.keys(itemContent)
       .filter(prop => !prop.startsWith('_'));
 
-    const validItemFields = validFields.filter(field => itemStructure.fields.includes(field));
-    const missingItemFields = validItemFields.filter(field => !itemFields.includes(field));
+    const missingItemFields = validFields.filter(field =>
+      itemStructure.fields.includes(field) && !itemFields.includes(field)
+    );
+
+    missingItemFields.forEach(fieldName => {
+      if (this.structure.fields[fieldName].type === 'list') {
+        itemContent[fieldName] = [];
+
+      } else {
+        itemContent[fieldName] = '';
+      }
+    });
 
     itemFields.forEach(fieldName => {
       if (this.structure.fields[fieldName].type === 'list') {
@@ -52,8 +56,6 @@ export default class Content {
         });
       }
     });
-
-    missingItemFields.forEach(field => itemContent[field] = '');
   }
 
   _removePages(pageIdsToRemove) {
@@ -66,11 +68,8 @@ export default class Content {
 
   _removeSections(sectionIdsToRemove) {
     sectionIdsToRemove.forEach(id => {
-      const pages = Object.values(this.content.pages);
-      pages.forEach(page => {
-        page._items = page._items.filter(sectionId => {
-          return sectionId !== id
-        })
+      Object.values(this.content.pages).forEach(page => {
+        page._items = page._items.filter(sectionId => sectionId !== id);
       });
 
       delete this.content.sections[id];
@@ -78,22 +77,21 @@ export default class Content {
   }
 
   _removeInvalidFields(validFields, itemStructure, itemContent) {
-    const itemFields = Object.keys(itemContent)
-      .filter(prop => !prop.startsWith('_'));
+    Object.keys(itemContent)
+      .filter(prop => !prop.startsWith('_'))
+      .forEach(fieldName => {
+        const validItemFields = validFields.filter(field => itemStructure.fields.includes(field));
 
-    itemFields.forEach(fieldName => {
-      const validItemFields = validFields.filter(field => itemStructure.fields.includes(field));
-
-      if (validItemFields.includes(fieldName)) {
-        if (this.structure.fields[fieldName].type === 'list') {
-          itemContent[fieldName].forEach(listContent => {
-            this._removeInvalidFields(validFields, this.structure.fields[fieldName], listContent);
-          });
+        if (validItemFields.includes(fieldName)) {
+          if (this.structure.fields[fieldName].type === 'list') {
+            itemContent[fieldName].forEach(listContent => {
+              this._removeInvalidFields(validFields, this.structure.fields[fieldName], listContent);
+            });
+          }
+        } else {
+          delete itemContent[fieldName];
         }
-      } else {
-        delete itemContent[fieldName];
-      }
-    });
+      });
   }
 
   migratePages() {

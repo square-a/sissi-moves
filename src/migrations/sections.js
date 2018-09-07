@@ -28,22 +28,17 @@ export const getRequiredSectionsForPage = (pagesStructure, page) => {
   const allowedSectionTypes = pagesStructure[page._type].allowedItems || [c.TYPE_STANDARD];
   const minSections = pagesStructure[page._type].minItems || 0;
 
-  while(page._items.length + requiredSections.length < minSections) {
-    const newSection = _createSection(allowedSectionTypes[0]);
-    requiredSections.push(newSection);
+  let totalAmountOfSections = page._items.length + requiredSections.length;
+  while(totalAmountOfSections < minSections) {
+    requiredSections.push(_createSection(allowedSectionTypes[0]));
+    totalAmountOfSections += 1;
   }
 
   return requiredSections;
 }
 
 export const getSectionsOverMaximum = (pagesStructure, page) => {
-  const sectionsOverMaximum = [];
   const maxSections = pagesStructure[page._type].maxItems;
-  const existingSections = [...page._items];
 
-  while(existingSections.length > maxSections) {
-    sectionsOverMaximum.push(existingSections.pop());
-  }
-
-  return sectionsOverMaximum;
+  return page._items.slice(maxSections);
 }
