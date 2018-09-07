@@ -7,14 +7,14 @@ export default {
   pages: {
     'abc123': {
       _id: 'abc123',
-      _items: ['345def', '123abc'],
+      _items: ['345def'],
       _type: 'standard',
       path: '',
       title: 'Welcome',
     },
     'def345': {
       _id: 'def345',
-      _items: ['567ghi'],
+      _items: ['123abc', '567ghi', '789jkl'],
       _type: 'gallery',
       path: 'photos',
       title: 'My Album',
@@ -45,6 +45,11 @@ export default {
       _id: '567ghi',
       _type: 'photo',
       image: 'bfbfbfb.png',
+    },
+    '789jkl': {
+      _id: '789jkl',
+      _type: 'standard',
+      title: 'What a mess',
     },
   },
 };

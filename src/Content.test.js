@@ -293,16 +293,16 @@ describe('Content', () => {
           standard: {
             fields: ['title', 'path'],
           },
-          newSectionType: {
-            fields: ['image', 'path'],
-          },
         };
 
         const { pages, sections } = testContent.migrateSections().getContent();
         const pagesArray = Object.values(pages);
 
-        expect(pagesArray.find(page => page._items.includes('123abc'))).toBeUndefined();
+        expect(pages.def345._items).not.toContain('123abc');
+        expect(pages.def345._items).not.toContain('567ghi');
+        expect(pages.def345._items).toContain('789jkl');
         expect(sections['123abc']).toBeUndefined();
+        expect(sections['567ghi']).toBeUndefined();
       });
 
       it('should remove sections exceeding the maximum amount for each page', () => {
@@ -312,7 +312,6 @@ describe('Content', () => {
 
         const { sections } = testContent.migrateSections().getContent();
 
-        expect(sections['123abc']).toBeUndefined();
         expect(sections['345def']).toBeUndefined();
       });
     });

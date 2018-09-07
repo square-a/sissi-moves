@@ -11,7 +11,6 @@ export default class Content {
       sections: {},
       ..._cloneDeep(content),
     };
-    // TODO: validate structure (add default values for e.g. minItems = 0; maxItems = 99;)
     this.structure = _cloneDeep(structure);
   }
 
@@ -59,9 +58,7 @@ export default class Content {
 
   _removePages(pageIdsToRemove) {
     pageIdsToRemove.forEach(id => {
-      const existingPageIds = this.content.global._items;
-      const pageIndex = existingPageIds.findIndex(pageId => pageId === id);
-      existingPageIds.splice(pageIndex, 1);
+      this.content.global._items = this.content.global._items.filter(pageId => pageId !== id);
 
       delete this.content.pages[id];
     });
@@ -71,7 +68,9 @@ export default class Content {
     sectionIdsToRemove.forEach(id => {
       const pages = Object.values(this.content.pages);
       pages.forEach(page => {
-        page._items = page._items.filter(sectionId => sectionId === id)
+        page._items = page._items.filter(sectionId => {
+          return sectionId !== id
+        })
       });
 
       delete this.content.sections[id];

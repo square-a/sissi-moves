@@ -16,9 +16,9 @@ export const getInvalidPageIds = (pagesStructure, pagesContent) => {
   const invalidPageIds = [];
   const validPageTypes = Object.keys(pagesStructure);
 
-  Object.entries(pagesContent).forEach(([id, page]) => {
+  Object.values(pagesContent).forEach(page => {
     if (!validPageTypes.includes(page._type)) {
-      invalidPageIds.push(id);
+      invalidPageIds.push(page._id);
     }
   });
 

@@ -44,7 +44,7 @@
     "start": "npm run clear && npm run watch",
     "test": "./node_modules/.bin/jest --watch",
     "test:prepare": "./node_modules/.bin/jest",
-    "transpile": "./node_modules/.bin/babel src -d lib",
-    "watch": "./node_modules/.bin/babel src -d lib --watch"
+    "transpile": "./node_modules/.bin/babel src -d lib --ignore **/*.test.js,_testData",
+    "watch": "./node_modules/.bin/babel src -d lib --ignore **/*.test.js,_testData --watch"
   }
 }

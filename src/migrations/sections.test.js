@@ -30,16 +30,17 @@ describe('migrations/sections', () => {
 
   describe('getInvalidSectionIds', () => {
     it('should return an array of sections with invalid section types', () => {
-      testStructure.sections = { standard: {}, newSection: {} };
+      testStructure.sections = { standard: {} };
       const result = migrations.getInvalidSectionIds(testStructure, testContent);
 
       expect(result).toEqual(['123abc', '567ghi']);
     });
 
     it('should include invalid section types for each page type', () => {
+      testStructure.pages.gallery.allowedItems = ['standard'];
       const result = migrations.getInvalidSectionIds(testStructure, testContent);
 
-      expect(result).toEqual(['123abc']);
+      expect(result).toEqual(['123abc', '567ghi']);
     });
 
     it('should return an empty array if all existing sections have valid types', () => {
@@ -74,11 +75,11 @@ describe('migrations/sections', () => {
 
   describe('getSectionsOverMaximum', () => {
     it('should return an array with section ids for each section exceeding the maximum amount', () => {
-      testStructure.pages.standard.maxItems = 1;
+      testStructure.pages.gallery.maxItems = 1;
 
-      const result = migrations.getSectionsOverMaximum(testStructure.pages, testContent.pages.abc123);
+      const result = migrations.getSectionsOverMaximum(testStructure.pages, testContent.pages.def345);
 
-      expect(result.length).toBe(1);
+      expect(result.length).toBe(2);
     });
   });
 });
