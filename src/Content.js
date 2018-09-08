@@ -43,14 +43,21 @@ export default class Content {
     missingItemFields.forEach(fieldName => {
       if (this.structure.fields[fieldName].type === 'list') {
         itemContent[fieldName] = [];
-
       } else {
         itemContent[fieldName] = '';
       }
     });
 
-    itemFields.forEach(fieldName => {
-      if (this.structure.fields[fieldName].type === 'list') {
+    const allFields = Object.keys(itemContent)
+      .filter(prop => !prop.startsWith('_'));
+
+    allFields.forEach(fieldName => {
+      const fieldStructure = this.structure.fields[fieldName];
+      if (fieldStructure.type === 'list') {
+        while (itemContent[fieldName].length < fieldStructure.minItems) {
+          itemContent[fieldName].push({});
+        }
+        
         itemContent[fieldName].forEach(listContent => {
           this._addMissingFields(validFields, this.structure.fields[fieldName], listContent);
         });
@@ -84,6 +91,7 @@ export default class Content {
 
         if (validItemFields.includes(fieldName)) {
           if (this.structure.fields[fieldName].type === 'list') {
+            // remove items over max
             itemContent[fieldName].forEach(listContent => {
               this._removeInvalidFields(validFields, this.structure.fields[fieldName], listContent);
             });

@@ -15,7 +15,7 @@ export default {
     'def345': {
       _id: 'def345',
       _items: ['123abc', '567ghi', '789jkl'],
-      _type: 'gallery',
+      _type: 'photoAlbum',
       path: 'photos',
       title: 'My Album',
       gallery: [

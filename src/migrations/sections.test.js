@@ -37,7 +37,7 @@ describe('migrations/sections', () => {
     });
 
     it('should include invalid section types for each page type', () => {
-      testStructure.pages.gallery.allowedItems = ['standard'];
+      testStructure.pages.photoAlbum.allowedItems = ['standard'];
       const result = migrations.getInvalidSectionIds(testStructure, testContent);
 
       expect(result).toEqual(['123abc', '567ghi']);
@@ -58,7 +58,7 @@ describe('migrations/sections', () => {
         test1: {
           _id: 'test1',
           _items: [],
-          _type: 'gallery',
+          _type: 'photoAlbum',
         },
         test2: {
           _id: 'test2',
@@ -75,7 +75,7 @@ describe('migrations/sections', () => {
 
   describe('getSectionsOverMaximum', () => {
     it('should return an array with section ids for each section exceeding the maximum amount', () => {
-      testStructure.pages.gallery.maxItems = 1;
+      testStructure.pages.photoAlbum.maxItems = 1;
 
       const result = migrations.getSectionsOverMaximum(testStructure.pages, testContent.pages.def345);
 

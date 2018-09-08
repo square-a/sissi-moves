@@ -34,7 +34,7 @@ export default {
       minItems: 1,
       fields: ['title', 'path'],
     },
-    gallery: {
+    photoAlbum: {
       maxItems: 10,
       minItems: 4,
       allowedItems: ['photo', 'standard'],
