@@ -46,12 +46,10 @@ export default class Content {
       } else {
         itemContent[fieldName] = '';
       }
+      itemFields.push(fieldName);
     });
 
-    const allFields = Object.keys(itemContent)
-      .filter(prop => !prop.startsWith('_'));
-
-    allFields.forEach(fieldName => {
+    itemFields.forEach(fieldName => {
       const fieldStructure = this.structure.fields[fieldName];
       if (fieldStructure.type === 'list') {
         while (itemContent[fieldName].length < fieldStructure.minItems) {
@@ -95,7 +93,7 @@ export default class Content {
             while(itemContent[fieldName].length > fieldStructure.maxItems) {
               itemContent[fieldName].pop();
             }
-            
+
             itemContent[fieldName].forEach(listContent => {
               this._removeInvalidFields(validFields, fieldStructure, listContent);
             });
