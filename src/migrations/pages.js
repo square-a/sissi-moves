@@ -1,43 +1,71 @@
 import * as c from '../constants';
-import Logger from '../logger';
-import { getContentId, pluralize } from '../utils';
+import { getContentId } from '../utils';
 
-const logger = new Logger();
+export const _createPage = (_type = c.TYPE_STANDARD) => ({
+  _id: getContentId(),
+  _items: [],
+  _type,
+});
 
-export function addPages(content, minPages, structure) {
-  if (content.pages.length < minPages) {
-    const pagesToAdd = [];
+export const _getProtectedPageTypes = pages => Object.entries(pages)
+  .reduce((acc, [type, page]) => {
+    if (page.isProtected) acc.push(type);
+    return acc;
+  }, []);
 
-    while(content.pages.length < minPages) {
-      const newPage = {
-        id: getContentId(),
-        pageType: c.STANDARD_PAGE_TYPE,
-      };
+export const getInvalidPageIds = (pagesStructure, pagesContent) => {
+  const invalidPageIds = [];
+  const validPageTypes = Object.keys(pagesStructure);
 
-      content.pages.push(newPage);
-      pagesToAdd.push(newPage.id);
+  Object.values(pagesContent).forEach(page => {
+    if (!validPageTypes.includes(page._type)) {
+      invalidPageIds.push(page._id);
     }
+  });
 
-    logger.add({
-      item: `%=p% new ${pluralize('page', pagesToAdd)} [%=pid%]`,
-      prefix: c.LIST_ITEM,
-      interpolations: { p: { str: pagesToAdd.length, lvl: 1 }, pid: { str: pagesToAdd.join(', '), lvl: 1 }}
-    });
-  }
+  return invalidPageIds;
 }
 
-export function removePages(content, maxPages) {
-  if (content.pages.length > maxPages) {
-    const pagesToRemove = [];
-    while(content.pages.length > maxPages) {
-      const removedPage = content.pages.pop().id;
-      pagesToRemove.push(removedPage);
-    }
+export const getPagesOverMaximum = (structure, pagesContent) => {
+  const pagesOverMaximum = [];
+  const protectedPageTypes = _getProtectedPageTypes(structure.pages);
+  const maxAmountOfPages = structure.global.maxItems;
+  const existingPagesArray = Object.values(pagesContent).reverse();
 
-    logger.add({
-      item: `${pluralize('Page', pagesToRemove)} %=p%`,
-      prefix: c.LIST_ITEM,
-      interpolations: { p: { str: pagesToRemove.join(', '), lvl: 3 }}
-    });
+  while (existingPagesArray.length > maxAmountOfPages) {
+    const pageIndex = existingPagesArray
+      .findIndex(({ _type }) => !protectedPageTypes.includes(_type));
+
+    if (pageIndex !== -1) {
+      const [pageToRemove] = existingPagesArray.splice(pageIndex, 1);
+      pagesOverMaximum.push(pageToRemove._id);
+
+    } else {
+      break;
+    }
   }
+
+  return pagesOverMaximum;
+}
+
+export const getRequiredPages = (structure, pagesContent) => {
+  const requiredPages = [];
+  const protectedPageTypes = _getProtectedPageTypes(structure.pages);
+  const minAmountOfPages = structure.global.minItems;
+  const existingPagesArray = Object.values(pagesContent);
+
+  protectedPageTypes.forEach(type => {
+    const hasType = existingPagesArray.some(page => type === page._type);
+    if (!hasType) {
+      requiredPages.push(_createPage(type));
+    }
+  });
+
+  let totalAmountOfPages = existingPagesArray.length + requiredPages.length;
+  while (totalAmountOfPages < minAmountOfPages) {
+    requiredPages.push(_createPage());
+    totalAmountOfPages += 1;
+  }
+
+  return requiredPages;
 }
