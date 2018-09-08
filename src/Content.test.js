@@ -107,7 +107,7 @@ describe('Content', () => {
     });
 
     describe('field lists', () => {
-      it.only('should add the minimum amount of items', () => {
+      it('should add the minimum amount of items', () => {
         delete testContent.content.pages.def345.gallery;
         testContent._addMissingFields(
           validFields,
@@ -281,6 +281,35 @@ describe('Content', () => {
       const { sections } = testContent.getContent();
 
       expect(sections['345def']).not.toHaveProperty('title');
+    });
+
+    describe('field lists', () => {
+      it('should remove items exceeding the maximum', () => {
+        testContent.structure.fields.gallery.maxItems = 1;
+        testContent._removeInvalidFields(
+          validFields,
+          testContent.structure.pages.photoAlbum,
+          testContent.content.pages.def345
+        );
+
+        const { pages } = testContent.getContent();
+
+        expect(pages.def345.gallery.length).toBe(1);
+      });
+
+      it('should remove invalid fields from each item', () => {
+        testContent.structure.fields.gallery.fields = ['image'];
+        testContent._removeInvalidFields(
+          validFields,
+          testContent.structure.pages.photoAlbum,
+          testContent.content.pages.def345
+        );
+
+        const { pages } = testContent.getContent();
+
+        expect(pages.def345.gallery[0]).not.toHaveProperty('title');
+        expect(pages.def345.gallery[1]).not.toHaveProperty('title');
+      });
     });
   });
 
@@ -615,25 +644,25 @@ describe('Content', () => {
           delete testContent.structure.fields.title;
           const { pages } = testContent.migrateFields().getContent();
 
-          expect(pages.def345.photoAlbum[0]).not.toHaveProperty('title');
-          expect(pages.def345.photoAlbum[1]).not.toHaveProperty('title');
+          expect(pages.def345.gallery[0]).not.toHaveProperty('title');
+          expect(pages.def345.gallery[1]).not.toHaveProperty('title');
         });
 
         it('should remove invalid fields for the given field list', () => {
-          testContent.structure.fields.photoAlbum.fields = ['image'];
+          testContent.structure.fields.gallery.fields = ['image'];
           const { pages } = testContent.migrateFields().getContent();
 
-          expect(pages.def345.photoAlbum[0]).not.toHaveProperty('title');
-          expect(pages.def345.photoAlbum[1]).not.toHaveProperty('title');
+          expect(pages.def345.gallery[0]).not.toHaveProperty('title');
+          expect(pages.def345.gallery[1]).not.toHaveProperty('title');
         });
 
         it('should add missing fields', () => {
-          testContent.structure.fields.photoAlbum.fields = ['image', 'title', 'path'];
+          testContent.structure.fields.gallery.fields = ['image', 'title', 'path'];
 
           const { pages } = testContent.migrateFields().getContent();
 
-          expect(pages.def345.photoAlbum[0]).toHaveProperty('path', '');
-          expect(pages.def345.photoAlbum[1]).toHaveProperty('path', '');
+          expect(pages.def345.gallery[0]).toHaveProperty('path', '');
+          expect(pages.def345.gallery[1]).toHaveProperty('path', '');
         });
       });
     });

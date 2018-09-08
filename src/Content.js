@@ -57,7 +57,7 @@ export default class Content {
         while (itemContent[fieldName].length < fieldStructure.minItems) {
           itemContent[fieldName].push({});
         }
-        
+
         itemContent[fieldName].forEach(listContent => {
           this._addMissingFields(validFields, this.structure.fields[fieldName], listContent);
         });
@@ -90,10 +90,14 @@ export default class Content {
         const validItemFields = validFields.filter(field => itemStructure.fields.includes(field));
 
         if (validItemFields.includes(fieldName)) {
-          if (this.structure.fields[fieldName].type === 'list') {
-            // remove items over max
+          const fieldStructure = this.structure.fields[fieldName];
+          if (fieldStructure.type === 'list') {
+            while(itemContent[fieldName].length > fieldStructure.maxItems) {
+              itemContent[fieldName].pop();
+            }
+            
             itemContent[fieldName].forEach(listContent => {
-              this._removeInvalidFields(validFields, this.structure.fields[fieldName], listContent);
+              this._removeInvalidFields(validFields, fieldStructure, listContent);
             });
           }
         } else {
