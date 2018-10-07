@@ -39,7 +39,7 @@ export default class Content {
   }
 
   _addMissingFields(validFields, itemStructure = {}, itemContent) {
-    const { fields } = itemStructure || [];
+    const { fields = [] } = itemStructure;
 
     const itemFields = Object.keys(itemContent)
       .filter(prop => !prop.startsWith('_'));
@@ -90,7 +90,7 @@ export default class Content {
   }
 
   _removeInvalidFields(validFields, itemStructure = {}, itemContent) {
-    const { fields } = itemStructure || [];
+    const { fields = [] } = itemStructure;
 
     Object.keys(itemContent)
       .filter(prop => !prop.startsWith('_'))
