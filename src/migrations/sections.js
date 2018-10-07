@@ -1,3 +1,5 @@
+import _get from 'lodash.get';
+
 import * as c from '../constants';
 import { getContentId } from '../utils';
 
@@ -11,7 +13,10 @@ export const getInvalidSectionIds = (structure, content) => {
   const validSectionTypes = Object.keys(structure.sections);
 
   Object.values(content.pages).forEach(page => {
-    const validSectionTypesForPage = structure.pages[page._type].allowedItems || [c.TYPE_STANDARD];
+    const validSectionTypesForPage = structure.global.maxItems > 1
+      ? structure.pages[page._type].allowedItems || [c.TYPE_STANDARD]
+      : validSectionTypes;
+
     const invalidSectionIdsForPage = page._items.filter(sectionId => {
       const sectionType = content.sections[sectionId]._type;
 
@@ -25,10 +30,10 @@ export const getInvalidSectionIds = (structure, content) => {
 
 export const getRequiredSectionsForPage = (pagesStructure, page) => {
   const requiredSections = [];
-  const allowedSectionTypes = pagesStructure[page._type].allowedItems || [c.TYPE_STANDARD];
-  const minSections = pagesStructure[page._type].minItems || 0;
+  const allowedSectionTypes = _get(pagesStructure, `${page._type}.allowedItems`, [c.TYPE_STANDARD]);
+  const minSections = _get(pagesStructure, `${page._type}.minItems`, 0);
 
-  let totalAmountOfSections = page._items.length + requiredSections.length;
+  let totalAmountOfSections = page._items.length;
   while(totalAmountOfSections < minSections) {
     requiredSections.push(_createSection(allowedSectionTypes[0]));
     totalAmountOfSections += 1;
@@ -38,7 +43,7 @@ export const getRequiredSectionsForPage = (pagesStructure, page) => {
 }
 
 export const getSectionsOverMaximum = (pagesStructure, page) => {
-  const maxSections = pagesStructure[page._type].maxItems;
+  const maxSections = _get(pagesStructure, `${page._type}.maxItems`, Infinity);
 
   return page._items.slice(maxSections);
 }

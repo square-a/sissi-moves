@@ -21,7 +21,6 @@ export default function hashStructure(doSave) {
     fs.writeFileSync(hashPath, stHash);
 
   } else {
-    // TODO: return hash to parent process
     console.log(stHash);
   }
 };

@@ -15,7 +15,7 @@ export const _getProtectedPageTypes = pages => Object.entries(pages)
 
 export const getInvalidPageIds = (pagesStructure, pagesContent) => {
   const invalidPageIds = [];
-  const validPageTypes = Object.keys(pagesStructure);
+  const validPageTypes = [...Object.keys(pagesStructure), c.TYPE_STANDARD];
 
   Object.values(pagesContent).forEach(page => {
     if (!validPageTypes.includes(page._type)) {

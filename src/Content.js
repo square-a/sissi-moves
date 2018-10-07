@@ -11,7 +11,13 @@ export default class Content {
       sections: {},
       ..._cloneDeep(content),
     };
-    this.structure = _cloneDeep(structure);
+    this.structure = {
+      global: {},
+      pages: {},
+      sections: {},
+      fields: {},
+      ..._cloneDeep(structure),
+    };
   }
 
   getContent() {
@@ -32,12 +38,14 @@ export default class Content {
     });
   }
 
-  _addMissingFields(validFields, itemStructure, itemContent) {
+  _addMissingFields(validFields, itemStructure = {}, itemContent) {
+    const { fields } = itemStructure || [];
+
     const itemFields = Object.keys(itemContent)
       .filter(prop => !prop.startsWith('_'));
 
     const missingItemFields = validFields.filter(field =>
-      itemStructure.fields.includes(field) && !itemFields.includes(field)
+      fields.includes(field) && !itemFields.includes(field)
     );
 
     missingItemFields.forEach(fieldName => {
@@ -81,11 +89,13 @@ export default class Content {
     });
   }
 
-  _removeInvalidFields(validFields, itemStructure, itemContent) {
+  _removeInvalidFields(validFields, itemStructure = {}, itemContent) {
+    const { fields } = itemStructure || [];
+
     Object.keys(itemContent)
       .filter(prop => !prop.startsWith('_'))
       .forEach(fieldName => {
-        const validItemFields = validFields.filter(field => itemStructure.fields.includes(field));
+        const validItemFields = validFields.filter(field => fields.includes(field));
 
         if (validItemFields.includes(fieldName)) {
           const fieldStructure = this.structure.fields[fieldName];
