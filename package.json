@@ -1,7 +1,7 @@
 {
   "name": "sissi-moves",
   "description": "Content migration for sissi (simple static sites)",
-  "version": "0.6.3",
+  "version": "1.0.0",
   "license": "GPL-3.0-or-later",
   "repository": "square-a/sissi-moves",
   "author": "A Square",
