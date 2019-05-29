@@ -1,3 +1,8 @@
+# DEPRECATED
+This sissi package is deprecated and will no longer be maintained. Please use [sissi-core](https://github.com/square-a/sissi-core) and [sissi-cli](https://github.com/square-a/sissi-cli) instead.
+
+See you there!
+
 # sissi-moves – content migration for [sissi]
 
 <img src='https://raw.githubusercontent.com/square-a/sissi/master/sissi.png'  width='160px' />
